@@ -1,4 +1,19 @@
-﻿namespace FreakaZoneAlexaSkill.Data {
+﻿//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 145                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: Keys.cs 145 2024-12-05 19:12:44Z                         $ #
+//#                                                                                 #
+//###################################################################################
+namespace FreakaZoneAlexaSkill.Data {
 	public static class Keys {
 		public const string NUM0 = "KEY_0";
 		public const string NUM1 = "KEY_1";

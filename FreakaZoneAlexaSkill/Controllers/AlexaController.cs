@@ -1,4 +1,19 @@
-﻿using Alexa.NET.Request;
+﻿//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 145                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: AlexaController.cs 145 2024-12-05 19:12:44Z              $ #
+//#                                                                                 #
+//###################################################################################
+using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using FreakaZoneAlexaSkill.Data;

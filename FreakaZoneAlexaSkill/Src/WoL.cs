@@ -1,4 +1,19 @@
-﻿using System.Net.NetworkInformation;
+﻿//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 145                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: WoL.cs 145 2024-12-05 19:12:44Z                          $ #
+//#                                                                                 #
+//###################################################################################
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
 using System.Text.RegularExpressions;

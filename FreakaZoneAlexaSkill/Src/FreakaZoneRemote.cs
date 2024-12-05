@@ -1,11 +1,24 @@
-﻿using FreakaZoneAlexaSkill.Data;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 145                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: FreakaZoneRemote.cs 145 2024-12-05 19:12:44Z             $ #
+//#                                                                                 #
+//###################################################################################
+using FreakaZoneAlexaSkill.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Text;
 using WebSocketSharp;
 
 namespace FreakaZoneAlexaSkill.Src {
