@@ -33,10 +33,10 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		public bool Set(string? einaus, string? prozent, out IOutputSpeech returnmsg) {
+		public bool Set(LichtleisteParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
-			if(einaus == null && prozent == null) {
+			if(param.einaus == null && param.prozent == null) {
 				// case "rainbow":
 					returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
 					_ = hitUrl("setNeoPixelEffect?effect=3");
@@ -48,8 +48,8 @@ namespace FreakaZoneAlexaSkill.Data {
 				//	returns = true;
 				//	break;
 			}
-			if(einaus != null) {
-				switch(einaus) {
+			if(param.einaus != null) {
+				switch(param.einaus) {
 					case "ein":
 					case "an":
 						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} is an gemacht");
@@ -85,9 +85,9 @@ namespace FreakaZoneAlexaSkill.Data {
 						break;
 				}
 			}
-			if(prozent != null) {
+			if(param.prozent != null) {
 				int p;
-				if(Int32.TryParse(prozent, out p)) {
+				if(Int32.TryParse(param.prozent, out p)) {
 					returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {p} prozent is gemacht");
 					if(p > 100)	p = 100;
 					if(p < 0) p = 0;
@@ -122,6 +122,19 @@ namespace FreakaZoneAlexaSkill.Data {
 		}
 		public Lichtleiste Get(string? name) {
 			return lichtleisten.Find(ll => ll.name == name?.ToLower()) ?? new Lichtleiste("noDevice", "");
+		}
+	}
+	public class LichtleisteParams {
+		private string? _einaus;
+		public string? einaus { get {  return _einaus; } }
+		private string? _prozent;
+		public string? prozent {  get { return _prozent; } }
+		public LichtleisteParams(string? einaus, string? prozent) {
+			_einaus = einaus;
+			_prozent = prozent;
+		}
+		public override string ToString() {
+			return $"einaus: {_einaus}, prozent: {_prozent}";
 		}
 	}
 }

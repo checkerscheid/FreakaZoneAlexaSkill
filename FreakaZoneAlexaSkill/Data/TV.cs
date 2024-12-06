@@ -54,46 +54,46 @@ namespace FreakaZoneAlexaSkill.Data {
 			_token = Token;
 			_tv = new SamsungTv(this);
 		}
-		public bool Set(string? einaus, string? dienst, string? leiserlauter, string? richtung, string? okquit, out IOutputSpeech returnmsg) {
+		public bool Set(TVParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
-			if(einaus == null && dienst == null && leiserlauter == null && richtung == null && okquit == null) {
+			if(param.einaus == null && param.dienst == null && param.leiserlauter == null && param.richtung == null && param.okquit == null) {
 				returnmsg = new PlainTextOutputSpeech($"{_name} wird eingeschaltet");
 				_ = _tv.SimulateReturn();
 				Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} eingeschaltet");
 				returns = true;
 			} else {
-				if(einaus != null) {
+				if(param.einaus != null) {
 					returnmsg = new PlainTextOutputSpeech($"{_name} wird ausgeschaltet");
 					_ = _tv.SimulateOff();
 					Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} ausgeschaltet");
 					returns = true;
 				}
-				if(dienst != null) {
-					switch(dienst) {
+				if(param.dienst != null) {
+					switch(param.dienst) {
 						case "netflix":
-							returnmsg = new PlainTextOutputSpeech($"{dienst} auf {_name} t. v. wird gestartet");
+							returnmsg = new PlainTextOutputSpeech($"{param.dienst} auf {_name} t. v. wird gestartet");
 							_ = _tv.SimulateNetflix();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} Netflix gestartet");
 							returns = true;
 							break;
 						case "disney":
-							returnmsg = new PlainTextOutputSpeech($"{dienst} auf {_name} t. v. wird gestartet");
+							returnmsg = new PlainTextOutputSpeech($"{param.dienst} auf {_name} t. v. wird gestartet");
 							_ = _tv.SimulateDisney();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} Disney+ gestartet");
 							returns = true;
 							break;
 						case "youtube":
-							returnmsg = new PlainTextOutputSpeech($"{dienst} auf {_name} t. v. wird gestartet");
+							returnmsg = new PlainTextOutputSpeech($"{param.dienst} auf {_name} t. v. wird gestartet");
 							_ = _tv.SimulateYouTube();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} YouTube gestartet");
 							returns = true;
 							break;
 					}
 				}
-				if(leiserlauter != null) {
-					switch(leiserlauter) {
+				if(param.leiserlauter != null) {
+					switch(param.leiserlauter) {
 						case "lauter":
 							returnmsg = new PlainTextOutputSpeech($"{name} lauter");
 							_ = _tv.SimulateVolumeUp();
@@ -108,8 +108,8 @@ namespace FreakaZoneAlexaSkill.Data {
 							break;
 					}
 				}
-				if(richtung != null) {
-					switch(richtung) {
+				if(param.richtung != null) {
+					switch(param.richtung) {
 						case "hoch":
 						case "nach oben":
 							returnmsg =  new PlainTextOutputSpeech($"{name} hoch");
@@ -140,8 +140,8 @@ namespace FreakaZoneAlexaSkill.Data {
 							break;
 					}
 				}
-				if(okquit != null) {
-					switch(okquit) {
+				if(param.okquit != null) {
+					switch(param.okquit) {
 						case "o. k.":
 						case "okey":
 						case "okay":
@@ -180,5 +180,28 @@ namespace FreakaZoneAlexaSkill.Data {
 		public Tv Get(string? name) {
 			return tvs.Find(ll => ll.name == name?.ToLower()) ?? new Tv("noDevice", "", 0, "", "");
 		}
+	}
+	public class TVParams {
+		private string? _einaus;
+		public string? einaus { get { return _einaus; } }
+		private string? _dienst;
+		public string? dienst { get { return _dienst; } }
+		private string? _leiserlauter;
+		public string? leiserlauter { get { return _leiserlauter; } }
+		private string? _richtung;
+		public string? richtung { get { return _richtung; } }
+		private string? _okquit;
+		public string? okquit { get { return _okquit; } }
+		public TVParams(string? einaus, string? dienst, string? leiserlauter, string? richtung, string? okquit) {
+			_einaus = einaus;
+			_dienst = dienst;
+			_leiserlauter = leiserlauter;
+			_richtung = richtung;
+			_okquit = okquit;
+		}
+		public override string ToString() {
+			return $"einaus: {_einaus}, dienst: {_dienst}, leiserlauter: {_leiserlauter}, richtung: {_richtung}, okquit: {_okquit}";
+		}
+
 	}
 }

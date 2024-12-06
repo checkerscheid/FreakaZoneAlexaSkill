@@ -15,6 +15,7 @@
 //###################################################################################
 using Alexa.NET.Response;
 using FreakaZoneAlexaSkill.Src;
+using System;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {
@@ -33,13 +34,13 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		public bool Set(string? einaus, string? prozent, string? linksrechts, out IOutputSpeech returnmsg) {
+		public bool Set(EventbeleuchtungParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
-			string target = linksrechts?? "";
-			if(einaus != null) {
-				switch(einaus) {
+			string target = param.linksrechts?? "";
+			if(param.einaus != null) {
+				switch(param.einaus) {
 					case "ein":
 					case "an":
 						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} is an gemacht");
@@ -57,9 +58,9 @@ namespace FreakaZoneAlexaSkill.Data {
 						break;
 				}
 			}
-			if(prozent != null) {
+			if(param.prozent != null) {
 				int p;
-				if(Int32.TryParse(prozent, out p)) {
+				if(Int32.TryParse(param.prozent, out p)) {
 					returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} {p} prozent is gemacht");
 					if(target == "")
 						_ = hitUrl($"setCwWw?ww={p}&cw={p}");
@@ -70,7 +71,7 @@ namespace FreakaZoneAlexaSkill.Data {
 					returns = true;
 				}
 			}
-			if(einaus == null && prozent == null) {
+			if(param.einaus == null && param.prozent == null) {
 				returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} effect is gemacht");
 				if(target == "")
 					_ = hitUrl($"setCwWwEffect?effect=4");
@@ -103,6 +104,31 @@ namespace FreakaZoneAlexaSkill.Data {
 		}
 		public Eventbeleuchtung Get(string? name) {
 			return eventbeleuchtungen.Find(eb => eb.name == name?.ToLower()) ?? new Eventbeleuchtung("noDevice", "");
+		}
+	}
+	public class EventbeleuchtungParams {
+		private string? _einaus;
+		public string? einaus {
+			get { return _einaus; }
+			set { _einaus = value;  }
+		}
+		private string? _prozent;
+		public string? prozent {
+			get { return _prozent; }
+			set { _prozent = value; }
+		}
+		private string? _linksrechts;
+		public string? linksrechts {
+			get {  return _linksrechts; }
+			set { _linksrechts = value; }
+		}
+		public EventbeleuchtungParams(string? einaus, string? prozent, string? linksrechts) {
+			_einaus = einaus;
+			_prozent = prozent;
+			_linksrechts = linksrechts;
+		}
+		public override string ToString() {
+			return $"einaus: {_einaus}, prozent: {_prozent}, linksrechts: {_linksrechts}";
 		}
 	}
 }

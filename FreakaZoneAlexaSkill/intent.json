@@ -49,20 +49,20 @@
             }
           ],
           "samples": [
-            "{lichtleiste} rainbow wheel",
-            "{lichtleiste} rainbow",
-            "mache {lichtleiste} neopixel {prozent} prozent",
-            "{lichtleiste} neopixel {prozent} prozent",
-            "mache {lichtleiste} neopixel {einaus}",
             "{lichtleiste} neopixel {einaus}",
-            "mache {lichtleiste} lichtleiste {prozent} prozent",
-            "{lichtleiste} lichtleiste {prozent} prozent",
+            "mache {lichtleiste} neopixel {einaus}",
+            "{lichtleiste} neopixel {prozent} prozent",
+            "mache {lichtleiste} neopixel {prozent} prozent",
+            "{lichtleiste} lichtleiste {einaus}",
             "mache {lichtleiste} lichtleiste {einaus}",
-            "{lichtleiste} lichtleiste {einaus}"
+            "{lichtleiste} lichtleiste {prozent} prozent",
+            "mache {lichtleiste} lichtleiste {prozent} prozent",
+            "{lichtleiste} neopixel rainbow",
+            "{lichtleiste} lichtleiste rainbow"
           ]
         },
         {
-          "name": "eventbeleuchtung",
+          "name": "lichterkette",
           "slots": [
             {
               "name": "beleuchtung",
@@ -82,15 +82,16 @@
             }
           ],
           "samples": [
-            "schalte {beleuchtung} eventbeleuchtung {einaus}",
-            "mache {beleuchtung} eventbeleuchtung {einaus}",
-            "{beleuchtung} eventbeleuchtung {einaus}",
-            "{beleuchtung} eventbeleuchtung {linksrechts} effekt",
-            "{beleuchtung} eventbeleuchtung effekt",
-            "{beleuchtung} eventbeleuchtung {linksrechts} {prozent} prozent",
-            "{beleuchtung} eventbeleuchtung {linksrechts} {einaus} schalten",
-            "{beleuchtung} eventbeleuchtung {prozent} prozent",
-            "{beleuchtung} eventbeleuchtung  {einaus} schalten"
+            "schalte {beleuchtung} lichterkette {einaus}",
+            "mache {beleuchtung} lichterkette {einaus}",
+            "{beleuchtung} lichterkette {einaus}",
+            "{beleuchtung} lichterkette {einaus} schalten",
+            "{beleuchtung} lichterkette {prozent} prozent",
+            "{beleuchtung} lichterkette {linksrechts} {einaus}",
+            "{beleuchtung} lichterkette {linksrechts} {einaus} schalten",
+            "{beleuchtung} lichterkette {linksrechts} {prozent} prozent",
+            "{beleuchtung} lichterkette effekt",
+            "{beleuchtung} lichterkette {linksrechts} effekt"
           ]
         },
         {
@@ -139,7 +140,7 @@
     "dialog": {
       "intents": [
         {
-          "name": "eventbeleuchtung",
+          "name": "lichterkette",
           "confirmationRequired": false,
           "prompts": {},
           "slots": [
@@ -154,10 +155,10 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.678035317411.1590643493370.365429650188",
                   "values": [
-                    "wohnzimmer",
-                    "küche",
                     "kinderzimmer",
-                    "pia"
+                    "küche",
+                    "pia",
+                    "wohnzimmer"
                   ]
                 }
               ]
@@ -174,8 +175,8 @@
                   "prompt": "Slot.Validation.678035317411.395149707125.963162360461",
                   "values": [
                     "ein",
-                    "aus",
-                    "an"
+                    "an",
+                    "aus"
                   ]
                 }
               ]
@@ -198,8 +199,8 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.678035317411.959242511949.1684452641284",
                   "values": [
-                    "links",
-                    "rechts"
+                    "rechts",
+                    "links"
                   ]
                 }
               ]
@@ -222,10 +223,10 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1026320834365.943834791434.282627564720",
                   "values": [
-                    "wohnzimmer",
-                    "schlafzimmer",
                     "kinderzimmer",
-                    "pia"
+                    "pia",
+                    "wohnzimmer",
+                    "schlafzimmer"
                   ]
                 }
               ]
@@ -259,9 +260,9 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1026320834365.670783364031.68397252338",
                   "values": [
-                    "netflix",
+                    "youtube",
                     "disney",
-                    "youtube"
+                    "netflix"
                   ]
                 }
               ]
@@ -294,14 +295,14 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1026320834365.385162572013.1203133024363",
                   "values": [
-                    "hoch",
-                    "nach oben",
-                    "runter",
-                    "nach unten",
-                    "links",
-                    "nach links",
                     "rechts",
-                    "nach rechts"
+                    "nach unten",
+                    "nach oben",
+                    "nach links",
+                    "nach rechts",
+                    "runter",
+                    "links",
+                    "hoch"
                   ]
                 }
               ]
@@ -317,13 +318,13 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1026320834365.665081414434.613727903252",
                   "values": [
-                    "o. k.",
-                    "okey",
                     "okay",
+                    "okey",
+                    "o. k.",
                     "abbrechen",
                     "zurück",
-                    "speichern",
-                    "enter"
+                    "enter",
+                    "speichern"
                   ]
                 }
               ]
@@ -346,13 +347,13 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1534377194132.1612048357175.1202675421466",
                   "values": [
-                    "wohnzimmer",
-                    "lautsprecher",
-                    "pflanze",
-                    "büro",
                     "flur",
                     "kinderzimmer",
-                    "pia"
+                    "lautsprecher",
+                    "büro",
+                    "pflanze",
+                    "pia",
+                    "wohnzimmer"
                   ]
                 }
               ]
@@ -368,15 +369,13 @@
                   "type": "isInSet",
                   "prompt": "Slot.Validation.1534377194132.486428598607.1463221848530",
                   "values": [
-                    "ein",
-                    "aus",
-                    "an",
-                    "rainbow",
-                    "rainbow wheel",
-                    "arztzimmer",
-                    "sonnenschein",
                     "sonne",
-                    "gemütlich"
+                    "sonnenschein",
+                    "gemütlich",
+                    "ein",
+                    "an",
+                    "aus",
+                    "arztzimmer"
                   ]
                 }
               ]

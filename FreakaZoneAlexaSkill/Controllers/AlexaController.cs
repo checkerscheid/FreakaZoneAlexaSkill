@@ -18,6 +18,7 @@ using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using FreakaZoneAlexaSkill.Data;
 using FreakaZoneAlexaSkill.Src;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
@@ -27,20 +28,28 @@ namespace FreakaZoneAlexaSkill.Controllers {
 	public class AlexaController: Controller {
 		const string INTENT_SLEEPNOW = "sleepnow";
 		const string INTENT_RGBCCT = "rgbcct";
-		const string INTENT_EVENTBELEUCHTUNG = "eventbeleuchtung";
+		const string INTENT_EVENTLIGHTING = "lichterkette";
 		const string INTENT_FERNSEHER = "fernseher";
+
+		private IOutputSpeech defaultMsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
+
 		[HttpPost, Route("/process")]
 		public SkillResponse Process(SkillRequest input) {
 			SkillResponse output = new SkillResponse();
+
 			Lichtleisten lichtleisten = new Lichtleisten();
 			Eventbeleuchtungen eventbeleuchtungen = new Eventbeleuchtungen();
 			Tvs tvs = new Tvs();
+
 			lichtleisten.init();
 			eventbeleuchtungen.init();
 			tvs.init();
+
 			output.Version = "1.0";
 			output.Response = new ResponseBody();
+
 			Logger.Write(MethodBase.GetCurrentMethod(), $"New Request: {input.Request.Type} detected");
+
 			switch(input.Request.Type) {
 				case "LaunchRequest":
 					output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"excited\" intensity=\"high\">waaas</amazon:emotion></speak>");
@@ -54,7 +63,6 @@ namespace FreakaZoneAlexaSkill.Controllers {
 					Eventbeleuchtung eventbeleuchtung;
 					Tv tv;
 					bool returns;
-					IOutputSpeech defaultMsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 					IOutputSpeech returnmsg = defaultMsg;
 					switch(ir.Intent.Name) {
 						case INTENT_SLEEPNOW:
@@ -83,42 +91,42 @@ namespace FreakaZoneAlexaSkill.Controllers {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"Lichtleiste: '{roomname}' nicht gefunden");
 							} else {
-								string? rgbcct_einaus = ir.Intent.Slots?["einaus"]?.SlotValue?.Value;
-								string? rgbcct_prozent = ir.Intent.Slots?["prozent"]?.SlotValue?.Value;
-								returns = lichtleiste.Set(rgbcct_einaus, rgbcct_prozent, out returnmsg);
+								LichtleisteParams llp = new LichtleisteParams(
+									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
+									prozent: ir.Intent.Slots?["prozent"]?.SlotValue?.Value);
+								returns = lichtleiste.Set(llp, out returnmsg);
 								if(returns) {
 									output.Response.OutputSpeech = returnmsg;
 								} else {
 									output.Response.OutputSpeech = defaultMsg;
 								}
+								Logger.Write(MethodBase.GetCurrentMethod(), llp.ToString());
 							}
 							output.Response.ShouldEndSession = true;
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_RGBCCT} finished");
 							break;
-						case INTENT_EVENTBELEUCHTUNG:
-							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_EVENTBELEUCHTUNG} detected");
+						case INTENT_EVENTLIGHTING:
+							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_EVENTLIGHTING} detected");
 							roomname = ir.Intent.Slots?["beleuchtung"]?.SlotValue?.Value;
 							eventbeleuchtung = eventbeleuchtungen.Get(roomname);
 							if(eventbeleuchtung.name == "noDevice") {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"Eventbeleuchtung: '{roomname}' nicht gefunden");
 							} else {
-								string? eventbeleuchtung_einaus = ir.Intent.Slots?["einaus"]?.SlotValue?.Value;
-								string? eventbeleuchtung_prozent = ir.Intent.Slots?["prozent"]?.SlotValue?.Value;
-								string? eventbeleuchtung_linksrechts = ir.Intent.Slots?["linksrechts"]?.SlotValue?.Value;
-								returns = eventbeleuchtung.Set(
-									eventbeleuchtung_einaus,
-									eventbeleuchtung_prozent,
-									eventbeleuchtung_linksrechts,
-									out returnmsg);
+								EventbeleuchtungParams ebp = new EventbeleuchtungParams(
+									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
+									prozent: ir.Intent.Slots?["prozent"]?.SlotValue?.Value,
+									linksrechts: ir.Intent.Slots?["linksrechts"]?.SlotValue?.Value);
+								returns = eventbeleuchtung.Set(ebp, out returnmsg);
 								if(returns) {
 									output.Response.OutputSpeech = returnmsg;
 								} else {
 									output.Response.OutputSpeech = defaultMsg;
 								}
+								Logger.Write(MethodBase.GetCurrentMethod(), ebp.ToString());
 							}
 							output.Response.ShouldEndSession = true;
-							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_EVENTBELEUCHTUNG} finished");
+							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_EVENTLIGHTING} finished");
 							break;
 						case INTENT_FERNSEHER:
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_FERNSEHER} detected");
@@ -128,23 +136,19 @@ namespace FreakaZoneAlexaSkill.Controllers {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 							} else {
-								string? fernseher_einaus = ir.Intent.Slots?["einaus"]?.SlotValue?.Value;
-								string? fernseher_dienst = ir.Intent.Slots?["dienst"]?.SlotValue?.Value;
-								string? fernseher_leiserlauter = ir.Intent.Slots?["leiserlauter"]?.SlotValue?.Value;
-								string? fernseher_richtung = ir.Intent.Slots?["richtung"]?.SlotValue?.Value;
-								string? fernseher_okquit = ir.Intent.Slots?["okquit"]?.SlotValue?.Value;
-								returns = tv.Set(
-									fernseher_einaus,
-									fernseher_dienst,
-									fernseher_leiserlauter,
-									fernseher_richtung,
-									fernseher_okquit,
-									out returnmsg);
+								TVParams tvp = new TVParams(
+									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
+									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value,
+									leiserlauter: ir.Intent.Slots?["leiserlauter"]?.SlotValue?.Value,
+									richtung: ir.Intent.Slots?["richtung"]?.SlotValue?.Value,
+									okquit: ir.Intent.Slots?["okquit"]?.SlotValue?.Value);
+								returns = tv.Set(tvp, out returnmsg);
 								if(returns) {
 									output.Response.OutputSpeech = returnmsg;
 								} else {
 									output.Response.OutputSpeech = defaultMsg;
 								}
+								Logger.Write(MethodBase.GetCurrentMethod(), tvp.ToString());
 							}
 							output.Response.ShouldEndSession = true;
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_FERNSEHER} finished");
@@ -382,18 +386,18 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							break;
 
 						#endregion
+*/
 
 						case "AMAZON.FallbackIntent":
 							output.Response.OutputSpeech = new PlainTextOutputSpeech("zu doof zu sprechen?");
 							output.Response.ShouldEndSession = true;
 							Logger.Write(MethodBase.GetCurrentMethod(), "zu doof zu sprechen");
 							break;
-*/
 					}
 					break;
 				default:
 					output.Response.OutputSpeech = new PlainTextOutputSpeech("ei alter");
-					Logger.Write(MethodBase.GetCurrentMethod(), "irgendein Request");
+					Logger.Write(MethodBase.GetCurrentMethod(), $"irgendein Request: {input.Request.Type}");
 					break;
 			}
 			return output;
