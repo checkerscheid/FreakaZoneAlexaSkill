@@ -28,7 +28,7 @@
           "slots": [],
           "samples": [
             "ich bin bettfertig",
-            "ich schlaf jetzt",
+            "schlafen gehen",
             "ich bin müde"
           ]
         },
@@ -41,7 +41,7 @@
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor"
+              "type": "actuator"
             },
             {
               "name": "prozent",
@@ -66,11 +66,14 @@
           "slots": [
             {
               "name": "beleuchtung",
-              "type": "AMAZON.Room"
+              "type": "AMAZON.Room",
+              "samples": [
+                "{beleuchtung}"
+              ]
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor"
+              "type": "actuator"
             },
             {
               "name": "prozent",
@@ -78,7 +81,7 @@
             },
             {
               "name": "linksrechts",
-              "type": "AMAZON.Actor"
+              "type": "AMAZON.RelativePosition"
             }
           ],
           "samples": [
@@ -103,31 +106,26 @@
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor"
+              "type": "actuator"
+            },
+            {
+              "name": "tvbutton",
+              "type": ""
             },
             {
               "name": "dienst",
-              "type": "AMAZON.TVSeries"
-            },
-            {
-              "name": "leiserlauter",
-              "type": "AMAZON.Actor"
+              "type": "streaming"
             },
             {
               "name": "richtung",
               "type": "AMAZON.RelativePosition"
-            },
-            {
-              "name": "okquit",
-              "type": "AMAZON.VisualModeTrigger"
             }
           ],
           "samples": [
-            "{tv} t. v. {okquit}",
             "{tv} t. v. {richtung}",
-            "{tv} t. v. {leiserlauter}",
+            "{tv} t. v. {tvbutton}",
             "{tv} t. v. {einaus}",
-            "mache {tv} t. v. {leiserlauter}",
+            "mache {tv} t. v. {tvbutton}",
             "schalte {tv} t. v. {einaus}",
             "mache {tv} t. v. {einaus}",
             "starte {tv} t. v.",
@@ -135,7 +133,103 @@
           ]
         }
       ],
-      "types": []
+      "types": [
+        {
+          "name": "actuator",
+          "values": [
+            {
+              "name": {
+                "value": "ab"
+              }
+            },
+            {
+              "name": {
+                "value": "ein"
+              }
+            },
+            {
+              "name": {
+                "value": "aus"
+              }
+            },
+            {
+              "name": {
+                "value": "an"
+              }
+            }
+          ]
+        },
+        {
+          "name": "streaming",
+          "values": [
+            {
+              "name": {
+                "value": "youtube"
+              }
+            },
+            {
+              "name": {
+                "value": "disney"
+              }
+            },
+            {
+              "name": {
+                "value": "netflix"
+              }
+            }
+          ]
+        },
+        {
+          "name": "television",
+          "values": [
+            {
+              "name": {
+                "value": "leiser"
+              }
+            },
+            {
+              "name": {
+                "value": "lauter"
+              }
+            },
+            {
+              "name": {
+                "value": "speichern"
+              }
+            },
+            {
+              "name": {
+                "value": "enter"
+              }
+            },
+            {
+              "name": {
+                "value": "zurück"
+              }
+            },
+            {
+              "name": {
+                "value": "abbrechen"
+              }
+            },
+            {
+              "name": {
+                "value": "o. k."
+              }
+            },
+            {
+              "name": {
+                "value": "okey"
+              }
+            },
+            {
+              "name": {
+                "value": "okay"
+              }
+            }
+          ]
+        }
+      ]
     },
     "dialog": {
       "intents": [
@@ -148,8 +242,10 @@
               "name": "beleuchtung",
               "type": "AMAZON.Room",
               "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {},
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.100918838224.183572491815"
+              },
               "validations": [
                 {
                   "type": "isInSet",
@@ -165,21 +261,10 @@
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor",
+              "type": "actuator",
               "confirmationRequired": false,
               "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.678035317411.395149707125.963162360461",
-                  "values": [
-                    "ein",
-                    "an",
-                    "aus"
-                  ]
-                }
-              ]
+              "prompts": {}
             },
             {
               "name": "prozent",
@@ -190,20 +275,10 @@
             },
             {
               "name": "linksrechts",
-              "type": "AMAZON.Actor",
+              "type": "AMAZON.RelativePosition",
               "confirmationRequired": false,
               "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.678035317411.959242511949.1684452641284",
-                  "values": [
-                    "rechts",
-                    "links"
-                  ]
-                }
-              ]
+              "prompts": {}
             }
           ]
         },
@@ -233,56 +308,24 @@
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor",
+              "type": "actuator",
               "confirmationRequired": false,
               "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.1026320834365.1315136902310.957587449556",
-                  "values": [
-                    "ein",
-                    "an",
-                    "aus"
-                  ]
-                }
-              ]
+              "prompts": {}
+            },
+            {
+              "name": "tvbutton",
+              "type": "",
+              "confirmationRequired": false,
+              "elicitationRequired": false,
+              "prompts": {}
             },
             {
               "name": "dienst",
-              "type": "AMAZON.TVSeries",
+              "type": "streaming",
               "confirmationRequired": false,
               "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.1026320834365.670783364031.68397252338",
-                  "values": [
-                    "youtube",
-                    "disney",
-                    "netflix"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "leiserlauter",
-              "type": "AMAZON.Actor",
-              "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.1026320834365.852311380540.873331060709",
-                  "values": [
-                    "lauter",
-                    "leiser"
-                  ]
-                }
-              ]
+              "prompts": {}
             },
             {
               "name": "richtung",
@@ -303,28 +346,6 @@
                     "runter",
                     "links",
                     "hoch"
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "okquit",
-              "type": "AMAZON.VisualModeTrigger",
-              "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.1026320834365.665081414434.613727903252",
-                  "values": [
-                    "okay",
-                    "okey",
-                    "o. k.",
-                    "abbrechen",
-                    "zurück",
-                    "enter",
-                    "speichern"
                   ]
                 }
               ]
@@ -360,25 +381,10 @@
             },
             {
               "name": "einaus",
-              "type": "AMAZON.Actor",
+              "type": "actuator",
               "confirmationRequired": false,
               "elicitationRequired": false,
-              "prompts": {},
-              "validations": [
-                {
-                  "type": "isInSet",
-                  "prompt": "Slot.Validation.1534377194132.486428598607.1463221848530",
-                  "values": [
-                    "sonne",
-                    "sonnenschein",
-                    "gemütlich",
-                    "ein",
-                    "an",
-                    "aus",
-                    "arztzimmer"
-                  ]
-                }
-              ]
+              "prompts": {}
             },
             {
               "name": "prozent",
@@ -498,6 +504,15 @@
           {
             "type": "PlainText",
             "value": "an oder aus oder was"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.100918838224.183572491815",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "welcher raum"
           }
         ]
       }

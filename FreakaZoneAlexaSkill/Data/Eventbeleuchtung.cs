@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 146                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Eventbeleuchtung.cs 145 2024-12-05 19:12:44Z             $ #
+//# File-ID      : $Id:: Eventbeleuchtung.cs 146 2024-12-07 12:43:11Z             $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
@@ -19,7 +19,7 @@ using System;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {
-	public class Eventbeleuchtung {
+	public class Eventbeleuchtung : IData {
 		private string _name;
 		public string name {
 			get { return _name; }
@@ -34,7 +34,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		public bool Set(EventbeleuchtungParams param, out IOutputSpeech returnmsg) {
+		private bool Set(EventbeleuchtungParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
@@ -83,6 +83,13 @@ namespace FreakaZoneAlexaSkill.Data {
 			}
 			return returns;
 		}
+		public bool Set(IParams param, out IOutputSpeech returnmsg) {
+			if(param.GetType() == typeof(EventbeleuchtungParams)) {
+				return Set((EventbeleuchtungParams)param, out returnmsg);
+			}
+			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
+			return false;
+		}
 		private async Task hitUrl(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
@@ -91,7 +98,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
 		}
 	}
-	public class Eventbeleuchtungen {
+	public class Eventbeleuchtungen: IList {
 		private List<Eventbeleuchtung> eventbeleuchtungen;
 		public Eventbeleuchtungen() {
 			eventbeleuchtungen = new List<Eventbeleuchtung>();
@@ -102,11 +109,11 @@ namespace FreakaZoneAlexaSkill.Data {
 			eventbeleuchtungen.Add(new Eventbeleuchtung("kinderzimmer", "172.17.80.164"));
 			eventbeleuchtungen.Add(new Eventbeleuchtung("pia", "172.17.80.164"));
 		}
-		public Eventbeleuchtung Get(string? name) {
+		public IData Get(string? name) {
 			return eventbeleuchtungen.Find(eb => eb.name == name?.ToLower()) ?? new Eventbeleuchtung("noDevice", "");
 		}
 	}
-	public class EventbeleuchtungParams {
+	public class EventbeleuchtungParams : IParams {
 		private string? _einaus;
 		public string? einaus {
 			get { return _einaus; }

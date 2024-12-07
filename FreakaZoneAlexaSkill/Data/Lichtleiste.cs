@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 146                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Lichtleiste.cs 145 2024-12-05 19:12:44Z                  $ #
+//# File-ID      : $Id:: Lichtleiste.cs 146 2024-12-07 12:43:11Z                  $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
@@ -18,7 +18,7 @@ using FreakaZoneAlexaSkill.Src;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {
-	public class Lichtleiste {
+	public class Lichtleiste : IData {
 		private string _name;
 		public string name {
 			get { return _name; }
@@ -33,7 +33,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		public bool Set(LichtleisteParams param, out IOutputSpeech returnmsg) {
+		private bool Set(LichtleisteParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 			if(param.einaus == null && param.prozent == null) {
@@ -98,6 +98,13 @@ namespace FreakaZoneAlexaSkill.Data {
 
 			return returns;
 		}
+		public bool Set(IParams param, out IOutputSpeech returnmsg) {
+			if(param.GetType() == typeof(LichtleisteParams)) {
+				return Set((EventbeleuchtungParams) param, out returnmsg);
+			}
+			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
+			return false;
+		}
 		private async Task hitUrl(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
@@ -106,7 +113,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
 		}
 	}
-	public class Lichtleisten {
+	public class Lichtleisten: IList {
 		private List<Lichtleiste> lichtleisten;
 		public Lichtleisten() {
 			lichtleisten = new List<Lichtleiste>();
@@ -120,11 +127,11 @@ namespace FreakaZoneAlexaSkill.Data {
 			lichtleisten.Add(new Lichtleiste("kinderzimmer", "172.17.80.169"));
 			lichtleisten.Add(new Lichtleiste("pia", "172.17.80.169"));
 		}
-		public Lichtleiste Get(string? name) {
+		public IData Get(string? name) {
 			return lichtleisten.Find(ll => ll.name == name?.ToLower()) ?? new Lichtleiste("noDevice", "");
 		}
 	}
-	public class LichtleisteParams {
+	public class LichtleisteParams : IParams {
 		private string? _einaus;
 		public string? einaus { get {  return _einaus; } }
 		private string? _prozent;

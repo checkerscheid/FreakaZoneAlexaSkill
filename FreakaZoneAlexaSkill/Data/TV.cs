@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 146                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: TV.cs 145 2024-12-05 19:12:44Z                           $ #
+//# File-ID      : $Id:: TV.cs 146 2024-12-07 12:43:11Z                           $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
@@ -18,7 +18,7 @@ using FreakaZoneAlexaSkill.Src;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {
-	public class Tv {
+	public class Tv : IData {
 		private string _name;
 		public string name {
 			get { return _name; }
@@ -54,7 +54,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			_token = Token;
 			_tv = new SamsungTv(this);
 		}
-		public bool Set(TVParams param, out IOutputSpeech returnmsg) {
+		private bool Set(TVParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
@@ -162,11 +162,17 @@ namespace FreakaZoneAlexaSkill.Data {
 					}
 				}
 			}
-
 			return returns;
 		}
+		public bool Set(IParams param, out IOutputSpeech returnmsg) {
+			if(param.GetType() == typeof(TVParams)) {
+				return Set((TVParams) param, out returnmsg);
+			}
+			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
+			return false;
+		}
 	}
-	public class Tvs {
+	public class Tvs : IList {
 		private List<Tv> tvs;
 		public Tvs() {
 			tvs = new List<Tv>();
@@ -177,11 +183,11 @@ namespace FreakaZoneAlexaSkill.Data {
 			tvs.Add(new Tv("kinderzimmer", "172.17.80.45", 8001, "00-C3-F4-F1-99-A0", ""));
 			tvs.Add(new Tv("pia", "172.17.80.45", 8001, "00-C3-F4-F1-99-A0", ""));
 		}
-		public Tv Get(string? name) {
+		public IData Get(string? name) {
 			return tvs.Find(ll => ll.name == name?.ToLower()) ?? new Tv("noDevice", "", 0, "", "");
 		}
 	}
-	public class TVParams {
+	public class TVParams : IParams {
 		private string? _einaus;
 		public string? einaus { get { return _einaus; } }
 		private string? _dienst;

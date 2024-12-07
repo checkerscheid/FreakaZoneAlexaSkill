@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 146                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 145 2024-12-05 19:12:44Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 146 2024-12-07 12:43:11Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -86,7 +86,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 						case INTENT_RGBCCT:
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_RGBCCT} detected");
 							roomname = ir.Intent.Slots?["lichtleiste"]?.SlotValue?.Value;
-							lichtleiste = lichtleisten.Get(roomname);
+							lichtleiste = (Lichtleiste)lichtleisten.Get(roomname);
 							if(lichtleiste.name == "noDevice") {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"Lichtleiste: '{roomname}' nicht gefunden");
@@ -108,7 +108,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 						case INTENT_EVENTLIGHTING:
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_EVENTLIGHTING} detected");
 							roomname = ir.Intent.Slots?["beleuchtung"]?.SlotValue?.Value;
-							eventbeleuchtung = eventbeleuchtungen.Get(roomname);
+							eventbeleuchtung = (Eventbeleuchtung)eventbeleuchtungen.Get(roomname);
 							if(eventbeleuchtung.name == "noDevice") {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"Eventbeleuchtung: '{roomname}' nicht gefunden");
@@ -131,7 +131,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 						case INTENT_FERNSEHER:
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_FERNSEHER} detected");
 							roomname = ir.Intent.Slots?["tv"]?.SlotValue?.Value;
-							tv = tvs.Get(roomname);
+							tv = (Tv)tvs.Get(roomname);
 							if(tv.name == "noDevice") {
 								output.Response.OutputSpeech = new PlainTextOutputSpeech($"{roomname} gibts nicht");
 								Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
