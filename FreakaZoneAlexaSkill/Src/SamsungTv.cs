@@ -24,7 +24,7 @@ namespace FreakaZoneAlexaSkill.Src {
 		const string YouTube = "111299001912";
 		public SamsungTv(Tv tv) {
 			settings = new Settings(
-				appName: "FreakaZoneRemote", // converted to base64 string as ID for TV
+				appName: "FreakaZoneRemoteTV", // converted to base64 string as ID for TV
 				ipAddr: tv.ip, // IP of TV
 				subnet: "255.255.0.0", // Subnet (required for TurnOn() function)
 				macAddr: tv.mac, // MAC address of TV (required for TurnOn() function)
@@ -143,18 +143,27 @@ namespace FreakaZoneAlexaSkill.Src {
 				remote.Press(Keys.RETURN);
 			}
 		}
-		public async Task SimulateOff() {
+		public async Task<string> SimulateOff() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(remote.IsTvOn()) {
 					remote.Connect();
 					remote.Press(Keys.POWER);
+					return "aus";
 				} else {
+					remote.TurnOn();
+					await Task.Delay(2000);
+					return "ein";
+				}
+			}
+		}
+		public async Task SimulateOn() {
+			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
+				if(!remote.IsTvOn()) {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
 			}
 		}
-
 	}
 	public class Direction {
 		public const int UP = 0;

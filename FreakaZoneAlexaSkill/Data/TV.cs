@@ -58,17 +58,50 @@ namespace FreakaZoneAlexaSkill.Data {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
-			if(param.einaus == null && param.dienst == null && param.leiserlauter == null && param.richtung == null && param.okquit == null) {
+			if(param.einaus == null && param.tvbutton == null && param.dienst == null && param.richtung == null) {
 				returnmsg = new PlainTextOutputSpeech($"{_name} wird eingeschaltet");
 				_ = _tv.SimulateReturn();
 				Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} eingeschaltet");
 				returns = true;
 			} else {
 				if(param.einaus != null) {
-					returnmsg = new PlainTextOutputSpeech($"{_name} wird ausgeschaltet");
+					returnmsg = new PlainTextOutputSpeech($"{_name} twist power");
 					_ = _tv.SimulateOff();
-					Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} ausgeschaltet");
+					Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} geschaltet");
 					returns = true;
+				}
+				if(param.tvbutton != null) {
+					switch(param.tvbutton) {
+						case "lauter":
+							returnmsg = new PlainTextOutputSpeech($"{name} lauter");
+							_ = _tv.SimulateVolumeUp();
+							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} lauter");
+							returns = true;
+							break;
+						case "leiser":
+							returnmsg = new PlainTextOutputSpeech($"{name} leiser");
+							_ = _tv.SimulateVolumeDown();
+							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} leiser");
+							returns = true;
+							break;
+						case "o. k.":
+						case "okey":
+						case "okay":
+						case "speichern":
+						case "enter":
+							returnmsg = new PlainTextOutputSpeech($"{name} okay");
+							_ = _tv.SimulateOK();
+							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} okay");
+							returns = true;
+							break;
+						case "abbrechen":
+						case "zurück":
+							returnmsg = new PlainTextOutputSpeech($"{name} zurück");
+							_ = _tv.SimulateReturn();
+							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} zurück");
+							returns = true;
+							break;
+					}
 				}
 				if(param.dienst != null) {
 					switch(param.dienst) {
@@ -88,22 +121,6 @@ namespace FreakaZoneAlexaSkill.Data {
 							returnmsg = new PlainTextOutputSpeech($"{param.dienst} auf {_name} t. v. wird gestartet");
 							_ = _tv.SimulateYouTube();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} YouTube gestartet");
-							returns = true;
-							break;
-					}
-				}
-				if(param.leiserlauter != null) {
-					switch(param.leiserlauter) {
-						case "lauter":
-							returnmsg = new PlainTextOutputSpeech($"{name} lauter");
-							_ = _tv.SimulateVolumeUp();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} lauter");
-							returns = true;
-							break;
-						case "leiser":
-							returnmsg = new PlainTextOutputSpeech($"{name} leiser");
-							_ = _tv.SimulateVolumeDown();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} leiser");
 							returns = true;
 							break;
 					}
@@ -140,27 +157,6 @@ namespace FreakaZoneAlexaSkill.Data {
 							break;
 					}
 				}
-				if(param.okquit != null) {
-					switch(param.okquit) {
-						case "o. k.":
-						case "okey":
-						case "okay":
-						case "speichern":
-						case "enter":
-							returnmsg = new PlainTextOutputSpeech($"{name} okay");
-							_ = _tv.SimulateOK();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} okay");
-							returns = true;
-							break;
-						case "abbrechen":
-						case "zurück":
-							returnmsg = new PlainTextOutputSpeech($"{name} zurück");
-							_ = _tv.SimulateReturn();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} zurück");
-							returns = true;
-							break;
-					}
-				}
 			}
 			return returns;
 		}
@@ -178,10 +174,10 @@ namespace FreakaZoneAlexaSkill.Data {
 			tvs = new List<Tv>();
 		}
 		public void init() {
-			tvs.Add(new Tv("wohnzimmer", "172.17.80.40", 8001, "64-1C-AE-E7-BE-C9", ""));
-			tvs.Add(new Tv("schlafzimmer", "172.17.80.43", 8001, "8C-EA-48-5E-75-98", ""));
-			tvs.Add(new Tv("kinderzimmer", "172.17.80.45", 8001, "00-C3-F4-F1-99-A0", ""));
-			tvs.Add(new Tv("pia", "172.17.80.45", 8001, "00-C3-F4-F1-99-A0", ""));
+			tvs.Add(new Tv("wohnzimmer", "172.17.80.40", 8002, "64-1C-AE-E7-BE-C9", "")); //15550794
+			tvs.Add(new Tv("schlafzimmer", "172.17.80.43", 8002, "8C-EA-48-5E-75-98", ""));
+			tvs.Add(new Tv("kinderzimmer", "172.17.80.45", 8002, "00-C3-F4-F1-99-A0", "82894561"));
+			tvs.Add(new Tv("pia", "172.17.80.45", 8002, "00-C3-F4-F1-99-A0", "82894561"));
 		}
 		public IData Get(string? name) {
 			return tvs.Find(ll => ll.name == name?.ToLower()) ?? new Tv("noDevice", "", 0, "", "");
@@ -190,23 +186,20 @@ namespace FreakaZoneAlexaSkill.Data {
 	public class TVParams : IParams {
 		private string? _einaus;
 		public string? einaus { get { return _einaus; } }
+		private string? _tvbutton;
+		public string? tvbutton { get { return _tvbutton; } }
 		private string? _dienst;
 		public string? dienst { get { return _dienst; } }
-		private string? _leiserlauter;
-		public string? leiserlauter { get { return _leiserlauter; } }
 		private string? _richtung;
 		public string? richtung { get { return _richtung; } }
-		private string? _okquit;
-		public string? okquit { get { return _okquit; } }
-		public TVParams(string? einaus, string? dienst, string? leiserlauter, string? richtung, string? okquit) {
+		public TVParams(string? einaus, string? tvbutton, string? dienst, string? richtung) {
 			_einaus = einaus;
+			_tvbutton = tvbutton;
 			_dienst = dienst;
-			_leiserlauter = leiserlauter;
 			_richtung = richtung;
-			_okquit = okquit;
 		}
 		public override string ToString() {
-			return $"einaus: {_einaus}, dienst: {_dienst}, leiserlauter: {_leiserlauter}, richtung: {_richtung}, okquit: {_okquit}";
+			return $"einaus: {_einaus}, tvbutton: {_tvbutton}, dienst: {_dienst}, richtung: {_richtung}";
 		}
 
 	}

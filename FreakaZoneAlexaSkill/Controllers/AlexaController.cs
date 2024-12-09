@@ -138,10 +138,9 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							} else {
 								TVParams tvp = new TVParams(
 									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
+									tvbutton: ir.Intent.Slots?["tvbutton"]?.SlotValue?.Value,
 									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value,
-									leiserlauter: ir.Intent.Slots?["leiserlauter"]?.SlotValue?.Value,
-									richtung: ir.Intent.Slots?["richtung"]?.SlotValue?.Value,
-									okquit: ir.Intent.Slots?["okquit"]?.SlotValue?.Value);
+									richtung: ir.Intent.Slots?["richtung"]?.SlotValue?.Value);
 								returns = tv.Set(tvp, out returnmsg);
 								if(returns) {
 									output.Response.OutputSpeech = returnmsg;

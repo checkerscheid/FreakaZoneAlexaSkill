@@ -36,7 +36,6 @@ namespace FreakaZoneAlexaSkill.Src {
 							await SendWakeOnLan(unicastIPAddressInformation.Address, multicastIpAddress, magicPacket);
 						}
 					} else if(multicastIpAddress.ToString().Equals("224.0.0.1")) {
-					} else if(multicastIpAddress.ToString().Equals("224.0.0.1")){
 						UnicastIPAddressInformation? unicastIPAddressInformation = iPInterfaceProperties.UnicastAddresses.Where((u) =>
 							u.Address.AddressFamily == AddressFamily.InterNetwork && !iPInterfaceProperties.GetIPv4Properties().IsAutomaticPrivateAddressingActive).FirstOrDefault();
 						if(unicastIPAddressInformation != null) {

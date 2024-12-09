@@ -339,13 +339,13 @@
                   "prompt": "Slot.Validation.1026320834365.385162572013.1203133024363",
                   "values": [
                     "rechts",
+                    "hoch",
                     "nach unten",
                     "nach oben",
                     "nach links",
                     "nach rechts",
                     "runter",
-                    "links",
-                    "hoch"
+                    "links"
                   ]
                 }
               ]

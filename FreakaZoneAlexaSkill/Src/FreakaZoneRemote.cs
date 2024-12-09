@@ -30,7 +30,7 @@ namespace FreakaZoneAlexaSkill.Src {
 		public FreakaZoneRemote(Settings s) {
 			settings = s;
 			string protokol = settings.Port == 8002 ? "wss" : "ws";
-			wsUrl = $"{protokol}://{settings.IpAddr}:{settings.Port}/api/v3/channels/samsung.remote.control?name={settings.AppName}";
+			wsUrl = $"{protokol}://{settings.IpAddr}:{settings.Port}/api/v2/channels/samsung.remote.control?name={settings.AppName}";
 			//Connect();
 			_disposed = false;
 		}
@@ -48,7 +48,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					wsClient.OnClose += WsClient_OnClose;
 					wsClient.OnError += WsClient_OnError;
 					Logger.Write(MethodBase.GetCurrentMethod(), $"websocket: {wsUrl}");
-					wsClient.Connect();
+					wsClient?.Connect();
 				} catch(Exception ex) {
 					Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
 				}
@@ -117,7 +117,7 @@ namespace FreakaZoneAlexaSkill.Src {
 				gntClient.OnClose += WsClient_OnClose;
 				gntClient.OnError += WsClient_OnError;
 				Logger.Write(MethodBase.GetCurrentMethod(), $"websocket token: {wsUrl}");
-				gntClient.Connect();
+				gntClient?.Connect();
 				Logger.Write(MethodBase.GetCurrentMethod(), "Accept dialog for new connection on TV...");
 				try {
 					await Task.Delay(30000, tokenSource.Token);
