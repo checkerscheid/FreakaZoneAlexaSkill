@@ -19,13 +19,14 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using WebSocketSharp;
+using System.Text;
+using WatsonWebsocket;
 
 namespace FreakaZoneAlexaSkill.Src {
 	public class FreakaZoneRemote: IDisposable {
 		private string wsUrl;
 		private Settings settings;
-		private WebSocket? wsClient;
+		private WatsonWsClient? wsClient;
 		private bool _disposed;
 		public FreakaZoneRemote(Settings s) {
 			settings = s;
@@ -38,21 +39,38 @@ namespace FreakaZoneAlexaSkill.Src {
 			await Task.Run(() => {
 				if(settings.Token != null) {
 					wsUrl += "&token=" + settings.Token;
+					try {
+						wsClient = new WatsonWsClient(new Uri(wsUrl));
+						wsClient.AcceptInvalidCertificates = true;
+						wsClient.ServerConnected += WsClient_OnOpen;
+						wsClient.MessageReceived += WsClient_MessageReceived;
+						wsClient.ServerDisconnected += WsClient_ServerDisconnected;
+						//wsClient.OnError += WsClient_OnError;
+						Logger.Write(MethodBase.GetCurrentMethod(), $"websocket: {wsUrl}");
+						wsClient.Start();
+					} catch(Exception ex) {
+						Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
+					}
 				} else {
 					GenerateNewToken();
 				}
-				try {
-					wsClient = new WebSocket(wsUrl);
-					wsClient.OnOpen += WsClient_OnOpen;
-					wsClient.OnMessage += WsClient_OnMessage;
-					wsClient.OnClose += WsClient_OnClose;
-					wsClient.OnError += WsClient_OnError;
-					Logger.Write(MethodBase.GetCurrentMethod(), $"websocket: {wsUrl}");
-					wsClient?.Connect();
-				} catch(Exception ex) {
-					Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
-				}
 			});
+		}
+
+		private void WsClient_ServerDisconnected(object? sender, EventArgs e) {
+			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
+		}
+
+		private void WsClient_MessageReceived(object? sender, MessageReceivedEventArgs e) {
+			string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
+			JObject json = JObject.Parse(s);
+			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{s.Trim()}'");
+			string method = json["event"]?.ToString() ?? String.Empty;
+			if(method.Equals("ms.channel.connect")) {
+				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
+				settings.Token = newToken;
+				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
+			}
 		}
 
 		public void StartService(string id) {
@@ -61,7 +79,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			}
 			string data = JsonConvert.SerializeObject(new SericeCommand(new ServiceParameters(new ServiceData(id)))).Replace("parameters", "params").Replace("pevent", "event");
 			Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {id}");
-			wsClient?.Send(data);
+			wsClient?.SendAsync(data);
 		}
 		public void Press(string key) {
 			if(settings.Token == null) {
@@ -69,7 +87,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			}
 			string data = JsonConvert.SerializeObject(new KeyCommand(new KeyParameters(key))).Replace("parameters", "params");
 			Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {key}");
-			wsClient?.Send(data);
+			wsClient?.SendAsync(data);
 		}
 
 		public bool IsTvOn() {
@@ -111,13 +129,13 @@ namespace FreakaZoneAlexaSkill.Src {
 		public async Task GenerateNewTokenAsync() {
 			CancellationTokenSource tokenSource = new CancellationTokenSource();
 			Logger.Write(MethodBase.GetCurrentMethod(), "Try to generate new Token");
-			using(WebSocket gntClient = new WebSocket(wsUrl)) {
-				gntClient.OnOpen += WsClient_OnOpen;
-				gntClient.OnMessage += WsClient_OnMessage;
-				gntClient.OnClose += WsClient_OnClose;
-				gntClient.OnError += WsClient_OnError;
+			using(WatsonWsClient gntClient = new WatsonWsClient(new Uri(wsUrl))) {
+				gntClient.AcceptInvalidCertificates = true;
+				gntClient.ServerConnected += WsClient_OnOpen;
+				gntClient.MessageReceived += WsClient_MessageReceived;
+				gntClient.ServerDisconnected += WsClient_ServerDisconnected;
 				Logger.Write(MethodBase.GetCurrentMethod(), $"websocket token: {wsUrl}");
-				gntClient?.Connect();
+				gntClient.Start();
 				Logger.Write(MethodBase.GetCurrentMethod(), "Accept dialog for new connection on TV...");
 				try {
 					await Task.Delay(30000, tokenSource.Token);
@@ -126,27 +144,28 @@ namespace FreakaZoneAlexaSkill.Src {
 				}
 			}
 		}
+
 		private void WsClient_OnOpen(object? sender, EventArgs e) {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnected with token: '{settings.Token}'");
 		}
-		private void WsClient_OnMessage(object? sender, MessageEventArgs e) {
-			//string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
-			JObject json = JObject.Parse(e.Data);
-			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{e.Data.Trim()}'");
-			string method = json["event"]?.ToString() ?? String.Empty;
-			if(method.Equals("ms.channel.connect")) {
-				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
-				settings.Token = newToken;
-				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
-			}
-		}
-		private void WsClient_OnClose(object? sender, CloseEventArgs e) {
-			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
-		}
-		private void WsClient_OnError(object? sender, WebSocketSharp.ErrorEventArgs e) {
-			Exception ex = e.Exception;
-			Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
-		}
+		//private void WsClient_OnMessage(object? sender, MessageEventArgs e) {
+		//	//string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
+		//	JObject json = JObject.Parse(e.Data);
+		//	Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{s.Trim()}'");
+		//	string method = json["event"]?.ToString() ?? String.Empty;
+		//	if(method.Equals("ms.channel.connect")) {
+		//		string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
+		//		settings.Token = newToken;
+		//		Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
+		//	}
+		//}
+		//private void WsClient_OnClose(object? sender, CloseEventArgs e) {
+		//	Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
+		//}
+		//private void WsClient_OnError(object? sender, WebSocketSharp.ErrorEventArgs e) {
+		//	Exception ex = e.Exception;
+		//	Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
+		//}
 
 		public void Dispose() {
 			Dispose(disposing: true);
@@ -155,7 +174,7 @@ namespace FreakaZoneAlexaSkill.Src {
 
 		protected virtual void Dispose(bool disposing) {
 			if(!_disposed && disposing) {
-				wsClient?.Close();
+				wsClient?.Stop();
 				_disposed = true;
 			}
 		}
