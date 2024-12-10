@@ -57,22 +57,6 @@ namespace FreakaZoneAlexaSkill.Src {
 			});
 		}
 
-		private void WsClient_ServerDisconnected(object? sender, EventArgs e) {
-			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
-		}
-
-		private void WsClient_MessageReceived(object? sender, MessageReceivedEventArgs e) {
-			string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
-			JObject json = JObject.Parse(s);
-			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{s.Trim()}'");
-			string method = json["event"]?.ToString() ?? String.Empty;
-			if(method.Equals("ms.channel.connect")) {
-				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
-				settings.Token = newToken;
-				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
-			}
-		}
-
 		public void StartService(string id) {
 			if(settings.Token == null) {
 				throw new ArgumentNullException("Token is ***null***");
@@ -148,6 +132,18 @@ namespace FreakaZoneAlexaSkill.Src {
 		private void WsClient_OnOpen(object? sender, EventArgs e) {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnected with token: '{settings.Token}'");
 		}
+
+		private void WsClient_MessageReceived(object? sender, MessageReceivedEventArgs e) {
+			string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
+			JObject json = JObject.Parse(s);
+			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{s.Trim()}'");
+			string method = json["event"]?.ToString() ?? String.Empty;
+			if(method.Equals("ms.channel.connect")) {
+				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
+				settings.Token = newToken;
+				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
+			}
+		}
 		//private void WsClient_OnMessage(object? sender, MessageEventArgs e) {
 		//	//string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
 		//	JObject json = JObject.Parse(e.Data);
@@ -159,6 +155,9 @@ namespace FreakaZoneAlexaSkill.Src {
 		//		Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
 		//	}
 		//}
+		private void WsClient_ServerDisconnected(object? sender, EventArgs e) {
+			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
+		}
 		//private void WsClient_OnClose(object? sender, CloseEventArgs e) {
 		//	Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnection cloesd");
 		//}
