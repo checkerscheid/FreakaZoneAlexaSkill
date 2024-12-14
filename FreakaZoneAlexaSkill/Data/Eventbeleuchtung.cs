@@ -8,14 +8,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 146                                                     $ #
+//# Revision     : $Rev:: 150                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Eventbeleuchtung.cs 146 2024-12-07 12:43:11Z             $ #
+//# File-ID      : $Id:: Eventbeleuchtung.cs 150 2024-12-14 16:20:21Z             $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
 using FreakaZoneAlexaSkill.Src;
-using System;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {

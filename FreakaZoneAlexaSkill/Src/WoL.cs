@@ -8,17 +8,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 149                                                     $ #
+//# Revision     : $Rev:: 150                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: WoL.cs 149 2024-12-14 16:13:07Z                          $ #
+//# File-ID      : $Id:: WoL.cs 150 2024-12-14 16:20:21Z                          $ #
 //#                                                                                 #
 //###################################################################################
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Reflection;
-using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace FreakaZoneAlexaSkill.Src {
 	public static class WoL {

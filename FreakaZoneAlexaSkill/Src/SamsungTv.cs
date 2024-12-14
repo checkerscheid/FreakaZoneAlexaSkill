@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 149                                                     $ #
+//# Revision     : $Rev:: 150                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: SamsungTv.cs 149 2024-12-14 16:13:07Z                    $ #
+//# File-ID      : $Id:: SamsungTv.cs 150 2024-12-14 16:20:21Z                    $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZoneAlexaSkill.Data;
