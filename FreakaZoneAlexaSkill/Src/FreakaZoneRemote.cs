@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 149                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: FreakaZoneRemote.cs 145 2024-12-05 19:12:44Z             $ #
+//# File-ID      : $Id:: FreakaZoneRemote.cs 149 2024-12-14 16:13:07Z             $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZoneAlexaSkill.Data;
