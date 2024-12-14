@@ -71,13 +71,13 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.VOLUP);
+				remote.Press(Remotekeys.VOLUP);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
+				remote.Press(Remotekeys.VOLUP);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
+				remote.Press(Remotekeys.VOLUP);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
+				remote.Press(Remotekeys.VOLUP);
 			}
 		}
 		public async Task SimulateVolumeDown() {
@@ -87,13 +87,13 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.VOLDOWN);
+				remote.Press(Remotekeys.VOLDOWN);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
+				remote.Press(Remotekeys.VOLDOWN);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
+				remote.Press(Remotekeys.VOLDOWN);
 				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
+				remote.Press(Remotekeys.VOLDOWN);
 			}
 		}
 		public async Task SimulateDirection(int direction) {
@@ -106,16 +106,16 @@ namespace FreakaZoneAlexaSkill.Src {
 					remote.Connect();
 					switch(direction) {
 						case Direction.UP:
-							remote.Press(Keys.UP);
+							remote.Press(Remotekeys.UP);
 							break;
 						case Direction.RIGHT:
-							remote.Press(Keys.RIGHT);
+							remote.Press(Remotekeys.RIGHT);
 							break;
 						case Direction.DOWN:
-							remote.Press(Keys.DOWN);
+							remote.Press(Remotekeys.DOWN);
 							break;
 						case Direction.LEFT:
-							remote.Press(Keys.LEFT);
+							remote.Press(Remotekeys.LEFT);
 							break;
 					}
 				}
@@ -130,7 +130,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.ENTER);
+				remote.Press(Remotekeys.ENTER);
 			}
 		}
 		public async Task SimulateReturn() {
@@ -140,14 +140,14 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.RETURN);
+				remote.Press(Remotekeys.RETURN);
 			}
 		}
 		public async Task<string> SimulateOff() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(remote.IsTvOn()) {
 					remote.Connect();
-					remote.Press(Keys.POWER);
+					remote.Press(Remotekeys.POWER);
 					return "aus";
 				} else {
 					remote.TurnOn();

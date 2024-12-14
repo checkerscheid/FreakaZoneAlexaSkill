@@ -1,10 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>FreakaZone.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+	<UseWindowsForms>true</UseWindowsForms>
+	<StartupObject>FreakaZoneAlexaSkill.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

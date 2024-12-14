@@ -48,7 +48,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					wsClient.OnClose += WsClient_OnClose;
 					wsClient.OnError += WsClient_OnError;
 					Logger.Write(MethodBase.GetCurrentMethod(), $"websocket: {wsUrl}");
-					wsClient?.Connect();
+					wsClient.Connect();
 				} catch(Exception ex) {
 					Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
 				}
@@ -117,9 +117,9 @@ namespace FreakaZoneAlexaSkill.Src {
 				gntClient.OnClose += WsClient_OnClose;
 				gntClient.OnError += WsClient_OnError;
 				Logger.Write(MethodBase.GetCurrentMethod(), $"websocket token: {wsUrl}");
-				gntClient?.Connect();
-				Logger.Write(MethodBase.GetCurrentMethod(), "Accept dialog for new connection on TV...");
 				try {
+					gntClient.Connect();
+					Logger.Write(MethodBase.GetCurrentMethod(), "Accept dialog for new connection on TV...");
 					await Task.Delay(30000, tokenSource.Token);
 				} catch(OperationCanceledException ex) {
 					Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
@@ -130,14 +130,18 @@ namespace FreakaZoneAlexaSkill.Src {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnected with token: '{settings.Token}'");
 		}
 		private void WsClient_OnMessage(object? sender, MessageEventArgs e) {
-			//string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
-			JObject json = JObject.Parse(e.Data);
-			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{e.Data.Trim()}'");
-			string method = json["event"]?.ToString() ?? String.Empty;
-			if(method.Equals("ms.channel.connect")) {
-				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
-				settings.Token = newToken;
-				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
+			try {
+				//string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
+				JObject json = JObject.Parse(e.Data);
+				Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{e.Data.Trim()}'");
+				string method = json["event"]?.ToString() ?? String.Empty;
+				if(method.Equals("ms.channel.connect")) {
+					string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
+					settings.Token = newToken;
+					Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
+				}
+			} catch(Exception ex) {
+				Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
 			}
 		}
 		private void WsClient_OnClose(object? sender, CloseEventArgs e) {

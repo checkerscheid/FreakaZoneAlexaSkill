@@ -18,8 +18,8 @@ using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using FreakaZoneAlexaSkill.Data;
 using FreakaZoneAlexaSkill.Src;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Controllers {
@@ -31,10 +31,15 @@ namespace FreakaZoneAlexaSkill.Controllers {
 		const string INTENT_EVENTLIGHTING = "lichterkette";
 		const string INTENT_FERNSEHER = "fernseher";
 
+
 		private IOutputSpeech defaultMsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
 
 		[HttpPost, Route("/process")]
 		public SkillResponse Process(SkillRequest input) {
+			if(!Directory.Exists("Log")) Directory.CreateDirectory("Log");
+			TextWriterTraceListener twtl = new TextWriterTraceListener($"\\Log\\FreakaZoneAlexaSkill.log");
+			Trace.Listeners.Add(twtl);
+
 			SkillResponse output = new SkillResponse();
 
 			Lichtleisten lichtleisten = new Lichtleisten();

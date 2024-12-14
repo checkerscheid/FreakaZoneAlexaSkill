@@ -14,7 +14,7 @@
 //#                                                                                 #
 //###################################################################################
 namespace FreakaZoneAlexaSkill.Data {
-	public static class Keys {
+	public static class Remotekeys {
 		public const string NUM0 = "KEY_0";
 		public const string NUM1 = "KEY_1";
 		public const string NUM2 = "KEY_2";
