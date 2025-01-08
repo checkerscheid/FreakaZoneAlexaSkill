@@ -100,7 +100,7 @@ namespace FreakaZoneAlexaSkill.Data {
 		}
 		public bool Set(IParams param, out IOutputSpeech returnmsg) {
 			if(param.GetType() == typeof(LichtleisteParams)) {
-				return Set((EventbeleuchtungParams) param, out returnmsg);
+				return Set((LichtleisteParams) param, out returnmsg);
 			}
 			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
 			return false;

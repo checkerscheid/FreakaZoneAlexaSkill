@@ -8,11 +8,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 146                                                     $ #
+//# Revision     : $Rev:: 149                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Program.cs 146 2024-12-07 12:43:11Z                      $ #
+//# File-ID      : $Id:: Program.cs 149 2024-12-14 16:13:07Z                      $ #
 //#                                                                                 #
 //###################################################################################
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:5134");
 
@@ -32,6 +34,9 @@ var app = builder.Build();
 //}
 
 //app.UseHttpsRedirection();
+
+TextWriterTraceListener twtl = new TextWriterTraceListener(String.Format("Log\\{0}_{1:yyyy_MM_dd}.log", "FreakaZoneAlexaSkill", DateTime.Now));
+Trace.Listeners.Add(twtl);
 
 app.UseAuthorization();
 
