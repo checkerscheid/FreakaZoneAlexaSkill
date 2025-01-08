@@ -56,7 +56,7 @@ namespace FreakaZoneAlexaSkill.Src {
 		}
 
 		public void StartService(string id) {
-			if(settings.Token == null) {
+			if(settings?.Token == "") {
 				throw new ArgumentNullException("Token is ***null***");
 			}
 			string data = JsonConvert.SerializeObject(new SericeCommand(new ServiceParameters(new ServiceData(id)))).Replace("parameters", "params").Replace("pevent", "event");
@@ -64,7 +64,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			wsClient?.Send(data);
 		}
 		public void Press(string key) {
-			if(settings.Token == null) {
+			if(settings?.Token == "") {
 				throw new ArgumentNullException("Token is ***null***");
 			}
 			string data = JsonConvert.SerializeObject(new KeyCommand(new KeyParameters(key))).Replace("parameters", "params");
@@ -134,7 +134,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			JObject json = JObject.Parse(e.Data);
 			Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{e.Data.Trim()}'");
 			string method = json["event"]?.ToString() ?? String.Empty;
-			if(method.Equals("ms.channel.connect")) {
+			if(method.Equals("ms.channel.connect") && settings.Token == "") {
 				string newToken = json["data"]?["token"]?.ToString() ?? String.Empty;
 				settings.Token = newToken;
 				Logger.Write(MethodBase.GetCurrentMethod(), $"New token: '{settings.Token}' generated");
