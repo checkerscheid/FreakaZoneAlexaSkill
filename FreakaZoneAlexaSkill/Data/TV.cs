@@ -167,6 +167,18 @@ namespace FreakaZoneAlexaSkill.Data {
 			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
 			return false;
 		}
+		public bool Set(IParams param, out string returnmsg) {
+			if(param.GetType() == typeof(TVParams)) {
+				IOutputSpeech msg;
+				bool ret = Set((TVParams)param, out msg);
+				if(ret) {
+					returnmsg = ((PlainTextOutputSpeech)msg).Text;
+					return true;
+				}
+			}
+			returnmsg = $"{_name} hat einen falschen Parameter";
+			return false;
+		}
 	}
 	public class Tvs : IList {
 		private List<Tv> tvs;
