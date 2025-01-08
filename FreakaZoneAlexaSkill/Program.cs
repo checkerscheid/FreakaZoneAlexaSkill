@@ -13,24 +13,10 @@
 //# File-ID      : $Id:: Program.cs 150 2024-12-14 16:20:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Application = System.Windows.Forms.Application;
-namespace FreakaZoneAlexaSkill {
-	static class Program {
-		public static FreakaZoneAlexaSkill MainProg;
-		[STAThread]
-		static void Main(string[] args) {
-			InitWebHost(args);
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			MainProg = new FreakaZoneAlexaSkill();
-			Application.Run(MainProg);
-		}
-		private static void InitWebHost(string[] args) {
-			var builder = WebApplication.CreateBuilder(args);
-			builder.WebHost.UseUrls("http://localhost:5134");
+using System.Diagnostics;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://localhost:5134");
 
 			// Add services to the container.
 
@@ -49,7 +35,10 @@ namespace FreakaZoneAlexaSkill {
 
 			//app.UseHttpsRedirection();
 
-			app.UseAuthorization();
+TextWriterTraceListener twtl = new TextWriterTraceListener(String.Format("Log\\{0}_{1:yyyy_MM_dd}.log", "FreakaZoneAlexaSkill", DateTime.Now));
+Trace.Listeners.Add(twtl);
+
+app.UseAuthorization();
 
 			app.MapControllers();
 

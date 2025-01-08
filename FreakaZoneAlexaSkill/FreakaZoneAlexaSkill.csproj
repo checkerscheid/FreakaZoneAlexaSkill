@@ -18,7 +18,7 @@
     <PackageReference Include="Alexa.NET" Version="1.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="websocket-sharp-Net6.0" Version="1.0.3.1" />
+    <PackageReference Include="WebSocketSharp-NonPreRelease" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

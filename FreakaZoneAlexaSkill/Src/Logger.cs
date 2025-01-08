@@ -20,13 +20,14 @@ namespace FreakaZoneAlexaSkill.Src {
 	public static class Logger {
 		public const string ErrorString = "Message: {0}\r\nTrace:\r\n{1}";
 		public static void Write(MethodBase? mb, string msg) {
+			Trace.AutoFlush = true;
 			int l = 20;
 			String n = mb?.Name ?? "";
 			if(n.Length > l) {
 				n = n.Substring(n.Length - l, l);
 			}
 			string dmsg = String.Format("{0:dd.MM.yy HH:mm:ss.fff} [{1}] - {2}", DateTime.Now, n.PadRight(l), msg);
-			Debug.WriteLine(dmsg);
+			Trace.WriteLine(dmsg);
 			Console.WriteLine(dmsg);
 		}
 		public static void Write(MethodBase? mb, string msg, params string[] args) {

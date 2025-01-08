@@ -73,8 +73,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 						case INTENT_SLEEPNOW:
 							Logger.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} detected");
 							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia!</amazon:emotion><amazon:effect name=\"whispered\">schlaf gut süße maus</amazon:effect></speak>");
-							_ = hitUrl("172.17.80.169", "setNeoPixelBrightness?brightness=15");
-							_ = hitUrl("172.17.80.169", "setNeoPixelColor?r=254&g=34&b=0");
+							_ = hitUrl("172.17.80.169", "setNeoPixelColor?r=100&g=5&b=0");
 							_ = hitUrl("172.17.80.164", "setCwWw?cw=10&ww=0");
 							int h = 0;
 							int m = 30;

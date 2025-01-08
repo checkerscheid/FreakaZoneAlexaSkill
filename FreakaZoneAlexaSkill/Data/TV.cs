@@ -182,7 +182,7 @@ namespace FreakaZoneAlexaSkill.Data {
 			tvs = new List<Tv>();
 		}
 		public void init() {
-			tvs.Add(new Tv("wohnzimmer", "172.17.80.40", 8002, "64-1C-AE-E7-BE-C9", "")); //15550794
+			tvs.Add(new Tv("wohnzimmer", "172.17.80.40", 8002, "64-1C-AE-E7-BE-C9", "87551621")); //15550794
 			tvs.Add(new Tv("schlafzimmer", "172.17.80.43", 8002, "8C-EA-48-5E-75-98", ""));
 			tvs.Add(new Tv("kinderzimmer", "172.17.80.45", 8002, "00-C3-F4-F1-99-A0", "82894561"));
 			tvs.Add(new Tv("pia", "172.17.80.45", 8002, "00-C3-F4-F1-99-A0", "82894561"));
