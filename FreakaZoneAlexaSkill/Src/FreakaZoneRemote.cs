@@ -115,9 +115,17 @@ namespace FreakaZoneAlexaSkill.Src {
 			Logger.Write(MethodBase.GetCurrentMethod(), "Try to generate new Token");
 			using(WatsonWsClient gntClient = new WatsonWsClient(new Uri(wsUrl))) {
 				gntClient.AcceptInvalidCertificates = true;
-				gntClient.ServerConnected += WsClient_OnOpen;
-				gntClient.MessageReceived += WsClient_MessageReceived;
-				gntClient.ServerDisconnected += WsClient_ServerDisconnected;
+				gntClient.ServerConnected += (object? sender, EventArgs e) => {
+					Logger.Write(MethodBase.GetCurrentMethod(), $"TokenServerConnected");
+				};
+				gntClient.MessageReceived += (object? sender, MessageReceivedEventArgs e) => {
+					string s = Encoding.UTF8.GetString(bytes: e.Data.Array).Replace("\0", string.Empty);
+					JObject json = JObject.Parse(s);
+					Logger.Write(MethodBase.GetCurrentMethod(), $"OnMessage data: '{s.Trim()}'");
+				};
+				gntClient.ServerDisconnected += (object? sender, EventArgs e) => {
+					Logger.Write(MethodBase.GetCurrentMethod(), $"TokenServerConnection cloesd");
+				};
 				Logger.Write(MethodBase.GetCurrentMethod(), $"websocket token: {wsUrl}");
 				gntClient.Start();
 				Logger.Write(MethodBase.GetCurrentMethod(), "Accept dialog for new connection on TV...");
