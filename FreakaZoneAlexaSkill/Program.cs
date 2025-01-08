@@ -13,6 +13,8 @@
 //# File-ID      : $Id:: Program.cs 149 2024-12-14 16:13:07Z                      $ #
 //#                                                                                 #
 //###################################################################################
+using System.Diagnostics;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls("http://localhost:5134");
 
@@ -32,6 +34,9 @@ var app = builder.Build();
 //}
 
 //app.UseHttpsRedirection();
+
+TextWriterTraceListener twtl = new TextWriterTraceListener(String.Format("Log\\{0}_{1:yyyy_MM_dd}.log", "FreakaZoneAlexaSkill", DateTime.Now));
+Trace.Listeners.Add(twtl);
 
 app.UseAuthorization();
 
