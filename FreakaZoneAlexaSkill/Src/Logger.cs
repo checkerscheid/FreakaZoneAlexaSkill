@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 145                                                     $ #
+//# Revision     : $Rev:: 154                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Logger.cs 145 2024-12-05 19:12:44Z                       $ #
+//# File-ID      : $Id:: Logger.cs 154 2025-01-29 18:33:30Z                       $ #
 //#                                                                                 #
 //###################################################################################
 using System.Diagnostics;
