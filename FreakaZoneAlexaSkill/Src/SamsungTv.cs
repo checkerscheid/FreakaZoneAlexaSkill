@@ -64,36 +64,44 @@ namespace FreakaZoneAlexaSkill.Src {
 				remote.StartService(YouTube);
 			}
 		}
-		public async Task SimulateVolumeUp() {
+		public void SimulateVolumeUp() {
+			Task.Run(async () => {
+				await SimulateVolumeUpAsync();
+			});
+		}
+		public async Task SimulateVolumeUpAsync() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(!remote.IsTvOn()) {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
+				int delay = 250;
+				int count = 5;
 				remote.Connect();
-				remote.Press(Keys.VOLUP);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLUP);
+				for(int i = 0; i < count; i++) {
+					await remote.Press(Keys.VOLUP);
+					await Task.Delay(delay);
+				}
 			}
 		}
-		public async Task SimulateVolumeDown() {
+		public void SimulateVolumeDown() {
+			Task.Run(async () => {
+				await SimulateVolumeDownAsync();
+			});
+		}
+		public async Task SimulateVolumeDownAsync() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(!remote.IsTvOn()) {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
+				int delay = 250;
+				int count = 5;
 				remote.Connect();
-				remote.Press(Keys.VOLDOWN);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
-				await Task.Delay(300);
-				remote.Press(Keys.VOLDOWN);
+				for(int i = 0; i < count; i++) {
+					await remote.Press(Keys.VOLDOWN);
+					await Task.Delay(delay);
+				}
 			}
 		}
 		public async Task SimulateDirection(int direction) {
@@ -106,16 +114,16 @@ namespace FreakaZoneAlexaSkill.Src {
 					remote.Connect();
 					switch(direction) {
 						case Direction.UP:
-							remote.Press(Keys.UP);
+							await remote.Press(Keys.UP);
 							break;
 						case Direction.RIGHT:
-							remote.Press(Keys.RIGHT);
+							await remote.Press(Keys.RIGHT);
 							break;
 						case Direction.DOWN:
-							remote.Press(Keys.DOWN);
+							await remote.Press(Keys.DOWN);
 							break;
 						case Direction.LEFT:
-							remote.Press(Keys.LEFT);
+							await remote.Press(Keys.LEFT);
 							break;
 					}
 				}
@@ -130,7 +138,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.ENTER);
+				await remote.Press(Keys.ENTER);
 			}
 		}
 		public async Task SimulateReturn() {
@@ -140,14 +148,14 @@ namespace FreakaZoneAlexaSkill.Src {
 					await Task.Delay(2000);
 				}
 				remote.Connect();
-				remote.Press(Keys.RETURN);
+				await remote.Press(Keys.RETURN);
 			}
 		}
 		public async Task<string> SimulateOff() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(remote.IsTvOn()) {
 					remote.Connect();
-					remote.Press(Keys.POWER);
+					await remote.Press(Keys.POWER);
 					return "aus";
 				} else {
 					remote.TurnOn();

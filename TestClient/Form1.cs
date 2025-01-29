@@ -5,7 +5,6 @@ using System.Reflection;
 namespace TestClient {
 	public partial class Form1: Form {
 		private Tvs tvs;
-		private Tv tv;
 		public Form1() {
 			InitializeComponent();
 			tvs = new Tvs();
@@ -15,7 +14,7 @@ namespace TestClient {
 		private void buttonOk_Click(object sender, EventArgs e) {
 			string returnmsg = "";
 			string roomname = "wohnzimmer";
-			tv = (Tv)tvs.Get(roomname);
+			Tv tv = (Tv)tvs.Get(roomname);
 			if(tv.name == "noDevice") {
 				Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 			} else {
@@ -32,7 +31,7 @@ namespace TestClient {
 		private void buttonNetflix_Click(object sender, EventArgs e) {
 			string returnmsg = "";
 			string roomname = "wohnzimmer";
-			tv = (Tv)tvs.Get(roomname);
+			Tv tv = (Tv)tvs.Get(roomname);
 			if(tv.name == "noDevice") {
 				Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 			} else {
@@ -49,7 +48,7 @@ namespace TestClient {
 		private void buttonLauter_Click(object sender, EventArgs e) {
 			string returnmsg = "";
 			string roomname = "wohnzimmer";
-			tv = (Tv)tvs.Get(roomname);
+			Tv tv = (Tv)tvs.Get(roomname);
 			if(tv.name == "noDevice") {
 				Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 			} else {
@@ -66,7 +65,7 @@ namespace TestClient {
 		private void buttonLeiser_Click(object sender, EventArgs e) {
 			string returnmsg = "";
 			string roomname = "wohnzimmer";
-			tv = (Tv)tvs.Get(roomname);
+			Tv tv = (Tv)tvs.Get(roomname);
 			if(tv.name == "noDevice") {
 				Logger.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 			} else {

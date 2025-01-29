@@ -63,13 +63,15 @@ namespace FreakaZoneAlexaSkill.Src {
 			Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {id}");
 			wsClient?.Send(data);
 		}
-		public void Press(string key) {
-			if(settings?.Token == "") {
-				throw new ArgumentNullException("Token is ***null***");
-			}
-			string data = JsonConvert.SerializeObject(new KeyCommand(new KeyParameters(key))).Replace("parameters", "params");
-			Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {key}");
-			wsClient?.Send(data);
+		public async Task Press(string key) {
+			await Task.Run(() => {
+				if(settings?.Token == "") {
+					throw new ArgumentNullException("Token is ***null***");
+				}
+				string data = JsonConvert.SerializeObject(new KeyCommand(new KeyParameters(key))).Replace("parameters", "params");
+				Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {key}");
+				wsClient?.Send(data);
+			});
 		}
 
 		public bool IsTvOn() {

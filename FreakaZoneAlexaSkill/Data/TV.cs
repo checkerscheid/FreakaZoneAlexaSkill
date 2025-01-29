@@ -74,13 +74,13 @@ namespace FreakaZoneAlexaSkill.Data {
 					switch(param.tvbutton) {
 						case "lauter":
 							returnmsg = new PlainTextOutputSpeech($"{name} lauter");
-							_ = _tv.SimulateVolumeUp();
+							_tv.SimulateVolumeUp();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} lauter");
 							returns = true;
 							break;
 						case "leiser":
 							returnmsg = new PlainTextOutputSpeech($"{name} leiser");
-							_ = _tv.SimulateVolumeDown();
+							_tv.SimulateVolumeDown();
 							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} leiser");
 							returns = true;
 							break;
