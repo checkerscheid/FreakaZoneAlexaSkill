@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 154                                                     $ #
+//# Revision     : $Rev:: 167                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: FreakaZoneRemote.cs 154 2025-01-29 18:33:30Z             $ #
+//# File-ID      : $Id:: FreakaZoneRemote.cs 167 2025-02-11 07:01:28Z             $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZoneAlexaSkill.Data;
@@ -26,16 +26,18 @@ namespace FreakaZoneAlexaSkill.Src {
 		private string wsUrl;
 		private Settings settings;
 		private WebSocket? wsClient;
+		private bool _connected;
 		private bool _disposed;
 		public FreakaZoneRemote(Settings s) {
+			_connected = false;
 			settings = s;
 			string protokol = settings.Port == 8002 ? "wss" : "ws";
 			wsUrl = $"{protokol}://{settings.IpAddr}:{settings.Port}/api/v2/channels/samsung.remote.control?name={settings.AppName}";
 			//Connect();
 			_disposed = false;
 		}
-		public async void Connect() {
-			await Task.Run(() => {
+		public async Task Connect() {
+			await Task.Run(async () => {
 				if(settings.Token != null) {
 					wsUrl += "&token=" + settings.Token;
 				} else {
@@ -49,6 +51,10 @@ namespace FreakaZoneAlexaSkill.Src {
 					wsClient.OnError += WsClient_OnError;
 					Logger.Write(MethodBase.GetCurrentMethod(), $"websocket: {wsUrl}");
 					wsClient?.Connect();
+					int _counter = 0;
+					while(!_connected && ++_counter > 100) {
+						await Task.Delay(100);
+					}
 				} catch(Exception ex) {
 					Logger.WriteError(MethodBase.GetCurrentMethod(), ex);
 				}
@@ -59,7 +65,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			if(settings?.Token == "") {
 				throw new ArgumentNullException("Token is ***null***");
 			}
-			string data = JsonConvert.SerializeObject(new SericeCommand(new ServiceParameters(new ServiceData(id)))).Replace("parameters", "params").Replace("pevent", "event");
+			string data = JsonConvert.SerializeObject(new ServiceCommand(new ServiceParameters(new ServiceData(id)))).Replace("parameters", "params").Replace("pevent", "event");
 			Logger.Write(MethodBase.GetCurrentMethod(), $"Sending key: {id}");
 			wsClient?.Send(data);
 		}
@@ -129,6 +135,7 @@ namespace FreakaZoneAlexaSkill.Src {
 			}
 		}
 		private void WsClient_OnOpen(object? sender, EventArgs e) {
+			_connected = true;
 			Logger.Write(MethodBase.GetCurrentMethod(), $"ServerConnected with token: '{settings.Token}'");
 		}
 		private void WsClient_OnMessage(object? sender, MessageEventArgs e) {
@@ -161,10 +168,10 @@ namespace FreakaZoneAlexaSkill.Src {
 				_disposed = true;
 			}
 		}
-		internal class SericeCommand {
+		internal class ServiceCommand {
 			public string method { get; set; }
 			public ServiceParameters parameters { get; set; }
-			public SericeCommand(ServiceParameters p) {
+			public ServiceCommand(ServiceParameters p) {
 				method = "ms.channel.emit";
 				parameters = p;
 			}

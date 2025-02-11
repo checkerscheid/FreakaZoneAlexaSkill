@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 154                                                     $ #
+//# Revision     : $Rev:: 167                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: TV.cs 154 2025-01-29 18:33:30Z                           $ #
+//# File-ID      : $Id:: TV.cs 167 2025-02-11 07:01:28Z                           $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
@@ -57,31 +57,36 @@ namespace FreakaZoneAlexaSkill.Data {
 		private bool Set(TVParams param, out IOutputSpeech returnmsg) {
 			bool returns = false;
 			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
+			string msg;
 
 			if(param.einaus == null && param.tvbutton == null && param.dienst == null && param.richtung == null) {
-				returnmsg = new PlainTextOutputSpeech($"{_name} wird eingeschaltet");
-				_ = _tv.SimulateReturn();
-				Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} eingeschaltet");
+				msg = $"{_name} wird eingeschaltet";
+				returnmsg = new PlainTextOutputSpeech(msg);
+				_ = _tv.SimulateKey(Keys.RETURN);
+				Logger.Write(MethodBase.GetCurrentMethod(), msg);
 				returns = true;
 			} else {
 				if(param.einaus != null) {
-					returnmsg = new PlainTextOutputSpeech($"{_name} twist power");
+					msg = $"{_name} geschaltet";
+					returnmsg = new PlainTextOutputSpeech(msg);
 					_ = _tv.SimulateOff();
-					Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} geschaltet");
+					Logger.Write(MethodBase.GetCurrentMethod(), msg);
 					returns = true;
 				}
 				if(param.tvbutton != null) {
 					switch(param.tvbutton) {
 						case "lauter":
-							returnmsg = new PlainTextOutputSpeech($"{name} lauter");
+							msg = $"{name} lauter";
+							returnmsg = new PlainTextOutputSpeech(msg);
 							_tv.SimulateVolumeUp();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} lauter");
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
 							returns = true;
 							break;
 						case "leiser":
-							returnmsg = new PlainTextOutputSpeech($"{name} leiser");
+							msg = $"{name} leiser";
+							returnmsg = new PlainTextOutputSpeech(msg);
 							_tv.SimulateVolumeDown();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} leiser");
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
 							returns = true;
 							break;
 						case "o. k.":
@@ -89,16 +94,95 @@ namespace FreakaZoneAlexaSkill.Data {
 						case "okay":
 						case "speichern":
 						case "enter":
-							returnmsg = new PlainTextOutputSpeech($"{name} okay");
-							_ = _tv.SimulateOK();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} okay");
+							msg = $"{name} okay";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.ENTER);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
 							returns = true;
 							break;
 						case "abbrechen":
 						case "zurück":
-							returnmsg = new PlainTextOutputSpeech($"{name} zurück");
-							_ = _tv.SimulateReturn();
-							Logger.Write(MethodBase.GetCurrentMethod(), $"{_name} zurück");
+							msg = $"{name} zurück";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.RETURN);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "home":
+							msg = $"{name} home";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.HOME);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "aus":
+							msg = $"{name} aus";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.POWER);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "kanal hoch":
+							msg = $"{name} ch_up";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.CHUP);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "kanal runter":
+							msg = $"{name} ch_down";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.CHDOWN);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "mute":
+							msg = $"{name} mute";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.MUTE);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "zurückspulen":
+							msg = $"{name} rwd";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.REWIND);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "play":
+							msg = $"{name} play";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.PLAY);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "pause":
+							msg = $"{name} pause";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.PAUSE);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "vorspulen":
+							msg = $"{name} fwd";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.FF);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "list":
+							msg = $"{name} list";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.CH_LIST);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
+							returns = true;
+							break;
+						case "guide":
+							msg = $"{name} list";
+							returnmsg = new PlainTextOutputSpeech(msg);
+							_ = _tv.SimulateKey(Keys.GUIDE);
+							Logger.Write(MethodBase.GetCurrentMethod(), msg);
 							returns = true;
 							break;
 					}

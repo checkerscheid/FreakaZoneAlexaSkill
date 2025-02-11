@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 154                                                     $ #
+//# Revision     : $Rev:: 167                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: SamsungTv.cs 154 2025-01-29 18:33:30Z                    $ #
+//# File-ID      : $Id:: SamsungTv.cs 167 2025-02-11 07:01:28Z                    $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZoneAlexaSkill.Data;
@@ -40,7 +40,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
-				remote.Connect();
+				await remote.Connect();
 				remote.StartService(Netflix);
 			}
 		}
@@ -50,7 +50,7 @@ namespace FreakaZoneAlexaSkill.Src {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
-				remote.Connect();
+				await remote.Connect();
 				remote.StartService(Disney);
 			}
 		}
@@ -60,8 +60,18 @@ namespace FreakaZoneAlexaSkill.Src {
 					remote.TurnOn();
 					await Task.Delay(2000);
 				}
-				remote.Connect();
+				await remote.Connect();
 				remote.StartService(YouTube);
+			}
+		}
+		public async Task SimulateKey(string key) {
+			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
+				if(!remote.IsTvOn()) {
+					remote.TurnOn();
+					await Task.Delay(2000);
+				}
+				await remote.Connect();
+				await remote.Press(key);
 			}
 		}
 		public void SimulateVolumeUp() {
@@ -77,7 +87,7 @@ namespace FreakaZoneAlexaSkill.Src {
 				}
 				int delay = 250;
 				int count = 5;
-				remote.Connect();
+				await remote.Connect();
 				for(int i = 0; i < count; i++) {
 					await remote.Press(Keys.VOLUP);
 					await Task.Delay(delay);
@@ -97,7 +107,7 @@ namespace FreakaZoneAlexaSkill.Src {
 				}
 				int delay = 250;
 				int count = 5;
-				remote.Connect();
+				await remote.Connect();
 				for(int i = 0; i < count; i++) {
 					await remote.Press(Keys.VOLDOWN);
 					await Task.Delay(delay);
@@ -111,7 +121,7 @@ namespace FreakaZoneAlexaSkill.Src {
 						remote.TurnOn();
 						await Task.Delay(2000);
 					}
-					remote.Connect();
+					await remote.Connect();
 					switch(direction) {
 						case Direction.UP:
 							await remote.Press(Keys.UP);
@@ -131,30 +141,10 @@ namespace FreakaZoneAlexaSkill.Src {
 				Logger.Write(MethodBase.GetCurrentMethod(), $"unknown Direction: {direction}");
 			}
 		}
-		public async Task SimulateOK() {
-			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
-				if(!remote.IsTvOn()) {
-					remote.TurnOn();
-					await Task.Delay(2000);
-				}
-				remote.Connect();
-				await remote.Press(Keys.ENTER);
-			}
-		}
-		public async Task SimulateReturn() {
-			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
-				if(!remote.IsTvOn()) {
-					remote.TurnOn();
-					await Task.Delay(2000);
-				}
-				remote.Connect();
-				await remote.Press(Keys.RETURN);
-			}
-		}
 		public async Task<string> SimulateOff() {
 			using(FreakaZoneRemote remote = new FreakaZoneRemote(settings)) {
 				if(remote.IsTvOn()) {
-					remote.Connect();
+					await remote.Connect();
 					await remote.Press(Keys.POWER);
 					return "aus";
 				} else {
