@@ -13,13 +13,13 @@
 //# File-ID      : $Id:: IData.cs 149 2024-12-14 16:13:07Z                        $ #
 //#                                                                                 #
 //###################################################################################
-using Alexa.NET.Response;
+using FreakaZone.Libraries.wpCommon;
 
 namespace FreakaZoneAlexaSkill.Data {
 	public interface IData {
 		public string name { get; set; }
 		public string ip { get; set; }
-		public bool Set(IParams param, out IOutputSpeech returnmsg);
+		public AlexaReturnType Set(IParams param, out string msg);
 	}
 	public interface IList {
 		public void init();

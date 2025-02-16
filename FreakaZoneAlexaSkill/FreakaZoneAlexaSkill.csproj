@@ -15,7 +15,12 @@
     <PackageReference Include="Alexa.NET" Version="1.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
-    <PackageReference Include="WebSocketSharp-NonPreRelease" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\wpCommon\wpCommon.csproj" />
+    <ProjectReference Include="..\..\Libraries\wpEventLog\wpEventLog.csproj" />
+    <ProjectReference Include="..\..\Libraries\wpSamsungRemote\wpSamsungRemote.csproj" />
   </ItemGroup>
 
   <ItemGroup>

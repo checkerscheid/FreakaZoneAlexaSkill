@@ -14,9 +14,10 @@
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Response;
-using FreakaZoneAlexaSkill.Src;
-using System;
+using FreakaZone.Libraries.wpCommon;
+using FreakaZone.Libraries.wpEventLog;
 using System.Reflection;
+using static FreakaZoneAlexaSkill.Data.IData;
 
 namespace FreakaZoneAlexaSkill.Data {
 	public class Eventbeleuchtung : IData {
@@ -34,68 +35,68 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		private bool Set(EventbeleuchtungParams param, out IOutputSpeech returnmsg) {
-			bool returns = false;
-			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
+		private AlexaReturnType Set(EventbeleuchtungParams param, out string returnmsg) {
+			AlexaReturnType returns = AlexaReturnType.Error;
+			returnmsg = "Da ist was schief gelaufen";
 
 			string target = param.linksrechts?? "";
 			if(param.einaus != null) {
 				switch(param.einaus) {
 					case "ein":
 					case "an":
-						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} is an gemacht");
 						if(target == "") _ = hitUrl("setCwWw?ww=50&cw=50");
 						if(target == "links") _ = hitUrl("setCwWw?ww=50");
 						if(target == "rechts") _ = hitUrl("setCwWw?cw=50");
-						returns = true;
+						returnmsg = $"Joo, {_name} {target} is an gemacht";
+						returns = AlexaReturnType.String;
 						break;
 					case "aus":
-						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} is aus gemacht");
 						if(target == "") _ = hitUrl("setCwWw?ww=0&cw=0");
 						if(target == "links") _ = hitUrl("setCwWw?ww=0");
 						if(target == "rechts") _ = hitUrl("setCwWw?cw=0");
-						returns = true;
+						returnmsg = $"Joo, {_name} {target} is aus gemacht";
+						returns = AlexaReturnType.String;
 						break;
 				}
 			}
 			if(param.prozent != null) {
 				int p;
 				if(Int32.TryParse(param.prozent, out p)) {
-					returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} {p} prozent is gemacht");
 					if(target == "")
 						_ = hitUrl($"setCwWw?ww={p}&cw={p}");
 					if(target == "links")
 						_ = hitUrl($"setCwWw?ww={p}");
 					if(target == "rechts")
 						_ = hitUrl($"setCwWw?cw={p}");
-					returns = true;
+					returnmsg = $"Joo, {_name} {target} {p} prozent is gemacht";
+					returns = AlexaReturnType.String;
 				}
 			}
 			if(param.einaus == null && param.prozent == null) {
-				returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {target} effect is gemacht");
 				if(target == "")
 					_ = hitUrl($"setCwWwEffect?effect=4");
 				if(target == "links")
 					_ = hitUrl($"setCwWwEffect?effect=5");
 				if(target == "rechts")
 					_ = hitUrl($"setCwWwEffect?effect=6");
-				returns = true;
+				returnmsg = $"Joo, {_name} {target} effect is gemacht";
+				returns = AlexaReturnType.String;
 			}
 			return returns;
 		}
-		public bool Set(IParams param, out IOutputSpeech returnmsg) {
+		public AlexaReturnType Set(IParams param, out string returnmsg) {
 			if(param.GetType() == typeof(EventbeleuchtungParams)) {
 				return Set((EventbeleuchtungParams)param, out returnmsg);
 			}
-			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
-			return false;
+			returnmsg = $"{_name} hat einen falschen Parameter";
+			return AlexaReturnType.String;
 		}
 		private async Task hitUrl(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);
 			string responseBody = await response.Content.ReadAsStringAsync();
-			Logger.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
+			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
 		}
 	}
 	public class Eventbeleuchtungen: IList {
