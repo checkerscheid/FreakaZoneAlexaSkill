@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 154                                                     $ #
+//# Revision     : $Rev:: 187                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 154 2025-01-29 18:33:30Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 187 2025-02-17 00:57:15Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -41,11 +41,10 @@ namespace FreakaZoneAlexaSkill.Controllers {
 
 			Lichtleisten lichtleisten = new Lichtleisten();
 			Eventbeleuchtungen eventbeleuchtungen = new Eventbeleuchtungen();
-			Tvs tvs = new Tvs();
+			Tvs tvs = new Tvs(false);
 
 			lichtleisten.init();
 			eventbeleuchtungen.init();
-			tvs.init();
 
 			output.Version = "1.0";
 			output.Response = new ResponseBody();
