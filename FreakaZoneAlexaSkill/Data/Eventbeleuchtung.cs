@@ -13,11 +13,9 @@
 //# File-ID      : $Id:: Eventbeleuchtung.cs 187 2025-02-17 00:57:15Z             $ #
 //#                                                                                 #
 //###################################################################################
-using Alexa.NET.Response;
 using FreakaZone.Libraries.wpCommon;
 using FreakaZone.Libraries.wpEventLog;
 using System.Reflection;
-using static FreakaZoneAlexaSkill.Data.IData;
 
 namespace FreakaZoneAlexaSkill.Data {
 	public class Eventbeleuchtung : IData {

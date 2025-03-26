@@ -22,7 +22,6 @@ using FreakaZone.Libraries.wpSamsungRemote;
 using FreakaZoneAlexaSkill.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
-using static FreakaZoneAlexaSkill.Data.IData;
 
 namespace FreakaZoneAlexaSkill.Controllers {
 	[ApiController]
@@ -69,18 +68,26 @@ namespace FreakaZoneAlexaSkill.Controllers {
 					switch(ir.Intent.Name) {
 						case INTENT_SLEEPNOW:
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} detected");
-							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia!</amazon:emotion><amazon:effect name=\"whispered\">schlaf gut süße maus</amazon:effect></speak>");
-							_ = hitUrl("172.17.80.169", "setNeoPixelColor?r=100&g=5&b=0");
-							_ = hitUrl("172.17.80.164", "setCwWw?cw=10&ww=0");
+
+							/// special case for pia and mila
+							DateTime freitag = new DateTime(2025, 3, 21);
+							DateTime samstag = new DateTime(2025, 3, 22, 12, 0, 0);
+							if(DateTime.Now > freitag && DateTime.Now < samstag)
+								output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia und mila!</amazon:emotion><amazon:effect name=\"whispered\">schlaft gut süße mäuse</amazon:effect></speak>");
+							else
+								output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia!</amazon:emotion><amazon:effect name=\"whispered\">schlaf gut süße maus</amazon:effect></speak>");
+
+							Task.Run(async () => await hitUrl("172.17.80.169", "setNeoPixelColor?r=100&g=5&b=0"));
+							Task.Run(async () => await hitUrl("172.17.80.164", "setCwWw?cw=10&ww=0"));
 							int h = 0;
 							int m = 30;
 							int sec = (h * 60 * 60) + (m * 60);
-							_ = hitUrl("172.17.80.169", $"setNeoPixelSleep?sleep={sec}");
-							_ = hitUrl("172.17.80.164", $"setCwWwSleep?sleep={sec}");
-							_ = hitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off");
-							_ = hitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off");
-							_ = hitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off");
-							_ = hitUrl("wpLicht:turner@172.17.80.162", "relay/0?turn=off");
+							Task.Run(async () => await hitUrl("172.17.80.169", $"setNeoPixelSleep?sleep={sec}"));
+							Task.Run(async () => await hitUrl("172.17.80.164", $"setCwWwSleep?sleep={sec}"));
+							Task.Run(async () => await hitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off"));
+							Task.Run(async () => await hitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off"));
+							Task.Run(async () => await hitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off"));
+							Task.Run(async () => await hitUrl("wpLicht:turner@172.17.80.162", "relay/0?turn=off"));
 							output.Response.ShouldEndSession = true;
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} finished");
 							break;
@@ -171,13 +178,11 @@ namespace FreakaZoneAlexaSkill.Controllers {
 			return returns;
 		}
 		private async Task hitUrl(string ip, string cmd) {
-			//Task.Run(() => {
 			HttpClient client = new HttpClient();
 			string url = $"http://{ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);
 			string responseBody = await response.Content.ReadAsStringAsync();
 			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
-			//});
 		}
 	}
 }
