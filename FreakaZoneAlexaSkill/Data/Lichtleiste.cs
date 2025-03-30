@@ -8,13 +8,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 154                                                     $ #
+//# Revision     : $Rev:: 187                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Lichtleiste.cs 154 2025-01-29 18:33:30Z                  $ #
+//# File-ID      : $Id:: Lichtleiste.cs 187 2025-02-17 00:57:15Z                  $ #
 //#                                                                                 #
 //###################################################################################
-using Alexa.NET.Response;
-using FreakaZoneAlexaSkill.Src;
+using FreakaZone.Libraries.wpCommon;
+using FreakaZone.Libraries.wpEventLog;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill.Data {
@@ -33,14 +33,14 @@ namespace FreakaZoneAlexaSkill.Data {
 			_name = Name;
 			_ip = Ip;
 		}
-		private bool Set(LichtleisteParams param, out IOutputSpeech returnmsg) {
-			bool returns = false;
-			returnmsg = new PlainTextOutputSpeech("Da ist was schief gelaufen");
+		private AlexaReturnType Set(LichtleisteParams param, out string returnmsg) {
+			AlexaReturnType returns = AlexaReturnType.Error;
+			returnmsg = "Da ist was schief gelaufen";
 			if(param.einaus == null && param.prozent == null) {
 				// case "rainbow":
-					returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
 					_ = hitUrl("setNeoPixelEffect?effect=3");
-					returns = true;
+					returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>";
+					returns = AlexaReturnType.Ssml;
 				//	break;
 				//case "rainbow wheel":
 				//	returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow wheel is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
@@ -52,65 +52,65 @@ namespace FreakaZoneAlexaSkill.Data {
 				switch(param.einaus) {
 					case "ein":
 					case "an":
-						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} is an gemacht");
 						_ = hitUrl("setNeoPixelOn");
-						returns = true;
+						returnmsg = $"Joo, {_name} is an gemacht";
+						returns = AlexaReturnType.String;
 						break;
 					case "aus":
-						returnmsg = new PlainTextOutputSpeech($"Joo, {_name} is aus gemacht");
 						_ = hitUrl("setNeoPixelOff");
-						returns = true;
+						returnmsg = $"Joo, {_name} is aus gemacht";
+						returns = AlexaReturnType.String;
 						break;
 					case "arztzimmer":
-						returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} arztzimmer is gemacht</amazon:emotion></speak>");
 						_ = hitUrl("setNeoPixelColor?r=0&g=0&b=0");
 						_ = hitUrl("setNeoPixelWW?ww=0");
 						_ = hitUrl("setNeoPixelCW?cw=75");
-						returns = true;
+						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} arztzimmer is gemacht</amazon:emotion></speak>";
+						returns = AlexaReturnType.Ssml;
 						break;
 					case "sonnenschein":
 					case "sonne":
-						returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} sonnenschein is gemacht</amazon:emotion></speak>");
 						_ = hitUrl("setNeoPixelColor?r=0&g=0&b=0");
 						_ = hitUrl("setNeoPixelWW?ww=75");
 						_ = hitUrl("setNeoPixelCW?cw=25");
-						returns = true;
+						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} sonnenschein is gemacht</amazon:emotion></speak>";
+						returns = AlexaReturnType.Ssml;
 						break;
 					case "gemütlich":
-						returnmsg = new SsmlOutputSpeech($"<speak>Psst, <amazon:effect name=\"whispered\">{_name} gemütlich is gemacht</amazon:effect></speak>");
 						_ = hitUrl("setNeoPixelColor?r=0&g=0&b=0");
 						_ = hitUrl("setNeoPixelWW?ww=50");
 						_ = hitUrl("setNeoPixelCW?cw=5");
-						returns = true;
+						returnmsg = $"<speak>Psst, <amazon:effect name=\"whispered\">{_name} gemütlich is gemacht</amazon:effect></speak>";
+						returns = AlexaReturnType.Ssml;
 						break;
 				}
 			}
 			if(param.prozent != null) {
 				int p;
 				if(Int32.TryParse(param.prozent, out p)) {
-					returnmsg = new PlainTextOutputSpeech($"Joo, {_name} {p} prozent is gemacht");
 					if(p > 100)	p = 100;
 					if(p < 0) p = 0;
 					_ = hitUrl($"setNeoPixelBrightness?brightness={p * 2.55}");
-					returns = true;
+					returnmsg = $"Joo, {_name} {p} prozent is gemacht";
+					returns = AlexaReturnType.String;
 				}
 			}
 
 			return returns;
 		}
-		public bool Set(IParams param, out IOutputSpeech returnmsg) {
+		public AlexaReturnType Set(IParams param, out string returnmsg) {
 			if(param.GetType() == typeof(LichtleisteParams)) {
-				return Set((LichtleisteParams) param, out returnmsg);
+				return Set((LichtleisteParams)param, out returnmsg);
 			}
-			returnmsg = new PlainTextOutputSpeech($"{_name} hat einen falschen Parameter");
-			return false;
+			returnmsg = $"{_name} hat einen falschen Parameter";
+			return AlexaReturnType.String;
 		}
 		private async Task hitUrl(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);
 			string responseBody = await response.Content.ReadAsStringAsync();
-			Logger.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
+			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
 		}
 	}
 	public class Lichtleisten: IList {
