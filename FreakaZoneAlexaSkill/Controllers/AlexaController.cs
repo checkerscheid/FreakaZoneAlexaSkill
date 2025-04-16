@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 198                                                     $ #
+//# Revision     : $Rev:: 202                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 198 2025-03-30 13:25:52Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 202 2025-04-16 03:08:22Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -70,9 +70,9 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} detected");
 
 							/// special case for pia and mila
-							DateTime freitag = new DateTime(2025, 3, 21);
-							DateTime samstag = new DateTime(2025, 3, 22, 12, 0, 0);
-							if(DateTime.Now > freitag && DateTime.Now < samstag)
+							DateTime tag1 = new DateTime(2025, 4, 12);
+							DateTime tag2 = tag1 + new TimeSpan(36, 0, 0);
+							if(DateTime.Now > tag1 && DateTime.Now < tag2)
 								output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia und mila!</amazon:emotion><amazon:effect name=\"whispered\">schlaft gut süße mäuse</amazon:effect></speak>");
 							else
 								output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia!</amazon:emotion><amazon:effect name=\"whispered\">schlaf gut süße maus</amazon:effect></speak>");
