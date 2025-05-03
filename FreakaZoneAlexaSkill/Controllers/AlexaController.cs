@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 202                                                     $ #
+//# Revision     : $Rev:: 206                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 202 2025-04-16 03:08:22Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 206 2025-05-03 00:08:15Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -182,7 +182,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 			string url = $"http://{ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);
 			string responseBody = await response.Content.ReadAsStringAsync();
-			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}: {responseBody}");
+			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}:\r\n\t{responseBody}");
 		}
 	}
 }
