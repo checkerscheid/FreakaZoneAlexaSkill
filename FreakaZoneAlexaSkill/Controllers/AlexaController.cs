@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 206                                                     $ #
+//# Revision     : $Rev:: 210                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 206 2025-05-03 00:08:15Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 210 2025-05-10 12:15:29Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -58,6 +58,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 					break;
 				case "IntentRequest":
 					IntentRequest ir = (IntentRequest)input.Request;
+					Debug.Write(MethodBase.GetCurrentMethod(), $"New Intent: {input.Request}");
 					string? roomname;
 					Lichtleiste lichtleiste;
 					Eventbeleuchtung eventbeleuchtung;
@@ -139,8 +140,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 								TVParams tvp = new TVParams(
 									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
 									tvbutton: ir.Intent.Slots?["tvbutton"]?.SlotValue?.Value,
-									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value,
-									richtung: ir.Intent.Slots?["richtung"]?.SlotValue?.Value);
+									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value);
 								returns = tv.Set(tvp, out returnMsg);
 								output.Response.OutputSpeech = GetOutputSpeech(returns, returnMsg);
 								Debug.Write(MethodBase.GetCurrentMethod(), tvp.ToString());
