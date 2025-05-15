@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 187                                                     $ #
+//# Revision     : $Rev:: 214                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: IData.cs 187 2025-02-17 00:57:15Z                        $ #
+//# File-ID      : $Id:: IData.cs 214 2025-05-15 14:51:30Z                        $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
@@ -22,7 +22,7 @@ namespace FreakaZoneAlexaSkill.Data {
 		public AlexaReturnType Set(IParams param, out string msg);
 	}
 	public interface IList {
-		public void init();
+		public void Init();
 		public IData Get(string? name);
 	}
 	public interface IParams {
