@@ -91,7 +91,7 @@ namespace FreakaZoneAlexaSkill {
 		private void AlexaSkill_ClientSizeChanged(object sender, EventArgs e) {
 			if(this.WindowState == FormWindowState.Minimized) {
 				this.Hide();
-				SystemIcon.BalloonTipTitle = Application.ProductName;
+				SystemIcon.BalloonTipTitle = Application.ProductName ?? "AlexaSkillB";
 				SystemIcon.BalloonTipText = "wurde minimiert";
 				SystemIcon.BalloonTipIcon = ToolTipIcon.Info;
 				SystemIcon.ShowBalloonTip(1000);

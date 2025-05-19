@@ -9,8 +9,10 @@
     <ApplicationIcon>FreakaZone.ico</ApplicationIcon>
     <Company>FreakaZone GmbH</Company>
     <Title>FreakaZone Alexa Skill</Title>
-    <Version>1.1.0</Version>
+    <Version></Version>
     <Product>Alexa Skill</Product>
+    <AssemblyVersion>1.1</AssemblyVersion>
+    <FileVersion>1.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +32,10 @@
     <PackageReference Include="Alexa.NET" Version="1.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.5" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="$(ProjectDir)externals\SVNUpdate.exe $(SolutionDir) $(ProjectDir)" />
+  </Target>
 
 
 </Project>
