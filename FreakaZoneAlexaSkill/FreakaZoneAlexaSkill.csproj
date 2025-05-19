@@ -1,18 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>FreakaZone.ico</ApplicationIcon>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DebugType>none</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>none</DebugType>
+    <Company>FreakaZone GmbH</Company>
+    <Title>FreakaZone Alexa Skill</Title>
+    <Version>1.1.0</Version>
+    <Product>Alexa Skill</Product>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,30 +18,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alexa.NET" Version="1.22.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.36" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Libraries\wpCommon\wpCommon.csproj" />
     <ProjectReference Include="..\..\Libraries\wpEventLog\wpEventLog.csproj" />
+    <ProjectReference Include="..\..\Libraries\wpIniFile\wpIniFile.csproj" />
     <ProjectReference Include="..\..\Libraries\wpSamsungRemote\wpSamsungRemote.csproj" />
+    <ProjectReference Include="..\..\Libraries\wpSQL\wpSQL.csproj" />
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <PackageReference Include="Alexa.NET" Version="1.22.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
 
 </Project>

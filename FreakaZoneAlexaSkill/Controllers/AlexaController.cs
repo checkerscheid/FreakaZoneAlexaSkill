@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 214                                                     $ #
+//# Revision     : $Rev:: 216                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 214 2025-05-15 14:51:30Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 216 2025-05-19 21:00:12Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -159,9 +159,9 @@ namespace FreakaZoneAlexaSkill.Controllers {
 								Debug.Write(MethodBase.GetCurrentMethod(), $"TV: '{roomname}' nicht gefunden");
 							} else {
 								TVParams tvp = new TVParams(
-									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value,
-									tvbutton: ir.Intent.Slots?["tvbutton"]?.SlotValue?.Value,
-									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value);
+									einaus: ir.Intent.Slots?["einaus"]?.SlotValue?.Value ?? "",
+									tvbutton: ir.Intent.Slots?["tvbutton"]?.SlotValue?.Value ?? "",
+									dienst: ir.Intent.Slots?["dienst"]?.SlotValue?.Value ?? "");
 								returns = tv.Set(tvp, out returnMsg);
 								output.Response.OutputSpeech = GetOutputSpeech(returns, returnMsg);
 								Debug.Write(MethodBase.GetCurrentMethod(), tvp.ToString());

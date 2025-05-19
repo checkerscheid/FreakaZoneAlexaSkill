@@ -8,47 +8,29 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 187                                                     $ #
+//# Revision     : $Rev:: 216                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Program.cs 187 2025-02-17 00:57:15Z                      $ #
+//# File-ID      : $Id:: Program.cs 216 2025-05-19 21:00:12Z                      $ #
 //#                                                                                 #
 //###################################################################################
-using System.Diagnostics;
+using FreakaZone.Libraries.wpEventLog;
 using System.Reflection;
 
-TextWriterTraceListener twtl = new TextWriterTraceListener(String.Format("Log\\{0}_{1:yyyy_MM_dd}.log", "FreakaZoneAlexaSkill", DateTime.Now));
-Trace.Listeners.Add(twtl);
-FreakaZone.Libraries.wpEventLog.Debug.withForms = false;
-
-FreakaZone.Libraries.wpEventLog.Debug.Write(MethodInfo.GetCurrentMethod(), "START" +
-	"\r\n####################################################################\r\n\r\n");
-
-var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://localhost:5134");
-
-// Add services to the container.
-
-builder.Services.AddControllers().AddNewtonsoftJson();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-//FreakaZone.Libraries.wpEventLog.Debug debug = new FreakaZone.Libraries.wpEventLog.Debug("FreakaZoneAlexaSkill");
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-//if(app.Environment.IsDevelopment()) {
-//	app.UseSwagger();
-//	app.UseSwaggerUI();
-//}
-
-//app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
-
-
+namespace FreakaZoneAlexaSkill {
+	internal static class Program {
+		public const string subversion = "214";
+		/// <summary>
+		///  The main entry point for the application.
+		/// </summary>
+		[STAThread]
+		static void Main() {
+			Debug debug = new Debug("FreakaZoneAlexaSkill");
+			Debug.Write(MethodInfo.GetCurrentMethod(), $"START v 1.0.{subversion}" +
+				"\r\n####################################################################\r\n\r\n");
+			// To customize application configuration such as set high DPI settings or default font,
+			// see https://aka.ms/applicationconfiguration.
+			ApplicationConfiguration.Initialize();
+			Application.Run(new AlexaSkill());
+		}
+	}
+}

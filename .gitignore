@@ -1,9 +1,6 @@
-
 /.svn
 /.vs
 /FreakaZoneAlexaSkill/bin
 /FreakaZoneAlexaSkill/obj
-/FreakaZoneAlexaSkill/Log
-/TestClient/bin
-/TestClient/obj
 /packages
+FreakaZoneAlexaSkill/Thumbs.db
