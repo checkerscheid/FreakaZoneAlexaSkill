@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 214                                                     $ #
+//# Revision     : $Rev:: 233                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Eventbeleuchtung.cs 214 2025-05-15 14:51:30Z             $ #
+//# File-ID      : $Id:: Eventbeleuchtung.cs 233 2025-05-25 18:09:18Z             $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
@@ -101,11 +101,11 @@ namespace FreakaZoneAlexaSkill.Data {
 			}
 			if(param.einaus == null && param.prozent == null) {
 				if(target == "")
-					_ = HitUrl($"setCwWwEffect?effect=4");
+					_ = HitUrl($"setCwWw?effect=4");
 				if(target == "links")
-					_ = HitUrl($"setCwWwEffect?effect=5");
+					_ = HitUrl($"setCwWw?effect=5");
 				if(target == "rechts")
-					_ = HitUrl($"setCwWwEffect?effect=6");
+					_ = HitUrl($"setCwWw?effect=6");
 				returnmsg = $"Joo, {_name} {target} effect is gemacht";
 				returns = AlexaReturnType.String;
 			}

@@ -98,7 +98,7 @@ namespace FreakaZoneAlexaSkill {
 			// 
 			// SystemIcon
 			// 
-			SystemIcon.Icon = (Icon)resources.GetObject("SystemIcon.Icon");
+			SystemIcon.Icon = global::FreakaZoneAlexaSkill.Properties.Resources.FreakaZone;
 			SystemIcon.Visible = true;
 			SystemIcon.MouseClick += SystemIcon_MouseClick;
 			// 
@@ -112,7 +112,7 @@ namespace FreakaZoneAlexaSkill {
 			Controls.Add(nonsens);
 			Controls.Add(statusStrip1);
 			Font = new Font("Verdana", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-			Icon = (Icon)resources.GetObject("$this.Icon");
+			Icon = global::FreakaZoneAlexaSkill.Properties.Resources.FreakaZone;
 			Margin = new Padding(3, 2, 3, 2);
 			Name = "AlexaSkill";
 			Text = "FreakaZone Alexa Skill";

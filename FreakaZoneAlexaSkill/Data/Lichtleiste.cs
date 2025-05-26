@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 214                                                     $ #
+//# Revision     : $Rev:: 233                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Lichtleiste.cs 214 2025-05-15 14:51:30Z                  $ #
+//# File-ID      : $Id:: Lichtleiste.cs 233 2025-05-25 18:09:18Z                  $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
@@ -65,13 +65,13 @@ namespace FreakaZoneAlexaSkill.Data {
 			returnmsg = "Da ist was schief gelaufen";
 			if(param.einaus == null && param.prozent == null) {
 				// case "rainbow":
-					_ = HitUrl("setNeoPixelEffect?effect=3");
+					_ = HitUrl("setNeoPixel?effect=3");
 					returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>";
 					returns = AlexaReturnType.Ssml;
 				//	break;
 				//case "rainbow wheel":
 				//	returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow wheel is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
-				//	_ = hitUrl("setNeoPixelEffect?effect=4");
+				//	_ = hitUrl("setNeoPixel?effect=4");
 				//	returns = true;
 				//	break;
 			}
@@ -79,34 +79,28 @@ namespace FreakaZoneAlexaSkill.Data {
 				switch(param.einaus) {
 					case "ein":
 					case "an":
-						_ = HitUrl("setNeoPixelOn");
+						_ = HitUrl("setNeoPixel?turn=1");
 						returnmsg = $"Joo, {_name} is an gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "aus":
-						_ = HitUrl("setNeoPixelOff");
+						_ = HitUrl("setNeoPixel?turn=0");
 						returnmsg = $"Joo, {_name} is aus gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "arztzimmer":
-						_ = HitUrl("setNeoPixelColor?r=0&g=0&b=0");
-						_ = HitUrl("setNeoPixelWW?ww=0");
-						_ = HitUrl("setNeoPixelCW?cw=75");
+						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=0&cw=75");
 						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} arztzimmer is gemacht</amazon:emotion></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
 					case "sonnenschein":
 					case "sonne":
-						_ = HitUrl("setNeoPixelColor?r=0&g=0&b=0");
-						_ = HitUrl("setNeoPixelWW?ww=75");
-						_ = HitUrl("setNeoPixelCW?cw=25");
+						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=75&cw=25");
 						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} sonnenschein is gemacht</amazon:emotion></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
 					case "gemütlich":
-						_ = HitUrl("setNeoPixelColor?r=0&g=0&b=0");
-						_ = HitUrl("setNeoPixelWW?ww=50");
-						_ = HitUrl("setNeoPixelCW?cw=5");
+						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=50&cw=5");
 						returnmsg = $"<speak>Psst, <amazon:effect name=\"whispered\">{_name} gemütlich is gemacht</amazon:effect></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
@@ -117,7 +111,7 @@ namespace FreakaZoneAlexaSkill.Data {
 				if(Int32.TryParse(param.prozent, out p)) {
 					if(p > 100)	p = 100;
 					if(p < 0) p = 0;
-					_ = HitUrl($"setNeoPixelBrightness?brightness={p * 2.55}");
+					_ = HitUrl($"setNeoPixel?brightness={p * 2.55}");
 					returnmsg = $"Joo, {_name} {p} prozent is gemacht";
 					returns = AlexaReturnType.String;
 				}

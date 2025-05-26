@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 216                                                     $ #
+//# Revision     : $Rev:: 233                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 216 2025-05-19 21:00:12Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 233 2025-05-25 18:09:18Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -99,13 +99,11 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							else
 								output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh pia!</amazon:emotion><amazon:effect name=\"whispered\">schlaf gut süße maus</amazon:effect></speak>");
 
-							Task.Run(async () => await HitUrl("172.17.80.169", "setNeoPixelColor?r=100&g=5&b=0"));
-							Task.Run(async () => await HitUrl("172.17.80.164", "setCwWw?cw=10&ww=0"));
 							int h = 0;
 							int m = 30;
 							int sec = (h * 60 * 60) + (m * 60);
-							Task.Run(async () => await HitUrl("172.17.80.169", $"setNeoPixelSleep?sleep={sec}"));
-							Task.Run(async () => await HitUrl("172.17.80.164", $"setCwWwSleep?sleep={sec}"));
+							Task.Run(async () => await HitUrl("172.17.80.169", $"setNeoPixel?r=100&g=5&b=0&sleep={sec}"));
+							Task.Run(async () => await HitUrl("172.17.80.164", $"setCwWw?cw=10&ww=0&sleep={sec}"));
 							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off"));
 							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off"));
 							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off"));

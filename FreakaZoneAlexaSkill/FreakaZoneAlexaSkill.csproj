@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>FreakaZone.ico</ApplicationIcon>
     <Company>FreakaZone GmbH</Company>
     <Title>FreakaZone Alexa Skill</Title>
     <Version></Version>
@@ -14,10 +13,6 @@
     <AssemblyVersion>1.1</AssemblyVersion>
     <FileVersion>1.1</FileVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Include="FreakaZone.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\wpCommon\wpCommon.csproj" />
@@ -31,6 +26,21 @@
   <ItemGroup>
     <PackageReference Include="Alexa.NET" Version="1.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
