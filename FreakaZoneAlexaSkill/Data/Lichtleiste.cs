@@ -26,7 +26,7 @@ namespace FreakaZoneAlexaSkill.Data {
 	/// turning it on or off, adjusting brightness, and setting specific effects or modes. Instances of this class are
 	/// initialized with a name and an IP address, which are used to identify and communicate with the light
 	/// strip.</remarks>
-	public class Lichtleiste : IData {
+	public class Lichtleiste: IData {
 		private string _name;
 		public string name {
 			get { return _name; }
@@ -65,9 +65,9 @@ namespace FreakaZoneAlexaSkill.Data {
 			returnmsg = "Da ist was schief gelaufen";
 			if(param.einaus == null && param.prozent == null) {
 				// case "rainbow":
-					_ = HitUrl("setNeoPixel?effect=3");
-					returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>";
-					returns = AlexaReturnType.Ssml;
+				_ = HitUrl("setNeoPixel?effect=3");
+				returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>";
+				returns = AlexaReturnType.Ssml;
 				//	break;
 				//case "rainbow wheel":
 				//	returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow wheel is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
@@ -109,8 +109,10 @@ namespace FreakaZoneAlexaSkill.Data {
 			if(param.prozent != null) {
 				int p;
 				if(Int32.TryParse(param.prozent, out p)) {
-					if(p > 100)	p = 100;
-					if(p < 0) p = 0;
+					if(p > 100)
+						p = 100;
+					if(p < 0)
+						p = 0;
 					_ = HitUrl($"setNeoPixel?brightness={p * 2.55}");
 					returnmsg = $"Joo, {_name} {p} prozent is gemacht";
 					returns = AlexaReturnType.String;
@@ -204,11 +206,11 @@ namespace FreakaZoneAlexaSkill.Data {
 	/// <remarks>This class encapsulates the state and configuration of a light strip, providing properties to
 	/// access its on/off state and brightness percentage. Instances of this class are immutable after
 	/// construction.</remarks>
-	public class LichtleisteParams : IParams {
+	public class LichtleisteParams: IParams {
 		private string? _einaus;
-		public string? einaus { get {  return _einaus; } }
+		public string? einaus { get { return _einaus; } }
 		private string? _prozent;
-		public string? prozent {  get { return _prozent; } }
+		public string? prozent { get { return _prozent; } }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="LichtleisteParams"/> class with the specified on/off state and

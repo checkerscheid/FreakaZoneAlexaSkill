@@ -25,7 +25,7 @@ namespace FreakaZoneAlexaSkill.Data {
 	/// <remarks>This class provides functionality to control the lighting device by sending commands over the
 	/// network. It supports operations such as turning the lights on or off, adjusting brightness levels, and applying
 	/// effects.</remarks>
-	public class Eventbeleuchtung : IData {
+	public class Eventbeleuchtung: IData {
 		private string _name;
 		public string name {
 			get { return _name; }
@@ -66,21 +66,27 @@ namespace FreakaZoneAlexaSkill.Data {
 			AlexaReturnType returns = AlexaReturnType.Error;
 			returnmsg = "Da ist was schief gelaufen";
 
-			string target = param.linksrechts?? "";
+			string target = param.linksrechts ?? "";
 			if(param.einaus != null) {
 				switch(param.einaus) {
 					case "ein":
 					case "an":
-						if(target == "") _ = HitUrl("setCwWw?ww=50&cw=50");
-						if(target == "links") _ = HitUrl("setCwWw?ww=50");
-						if(target == "rechts") _ = HitUrl("setCwWw?cw=50");
+						if(target == "")
+							_ = HitUrl("setCwWw?ww=50&cw=50");
+						if(target == "links")
+							_ = HitUrl("setCwWw?ww=50");
+						if(target == "rechts")
+							_ = HitUrl("setCwWw?cw=50");
 						returnmsg = $"Joo, {_name} {target} is an gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "aus":
-						if(target == "") _ = HitUrl("setCwWw?ww=0&cw=0");
-						if(target == "links") _ = HitUrl("setCwWw?ww=0");
-						if(target == "rechts") _ = HitUrl("setCwWw?cw=0");
+						if(target == "")
+							_ = HitUrl("setCwWw?ww=0&cw=0");
+						if(target == "links")
+							_ = HitUrl("setCwWw?ww=0");
+						if(target == "rechts")
+							_ = HitUrl("setCwWw?cw=0");
 						returnmsg = $"Joo, {_name} {target} is aus gemacht";
 						returns = AlexaReturnType.String;
 						break;
@@ -192,11 +198,11 @@ namespace FreakaZoneAlexaSkill.Data {
 	/// <remarks>This class encapsulates the configuration options for event lighting, including the on/off state,
 	/// brightness level, and directional settings. It is used to pass these parameters to methods or systems that control
 	/// event lighting.</remarks>
-	public class EventbeleuchtungParams : IParams {
+	public class EventbeleuchtungParams: IParams {
 		private string? _einaus;
 		public string? einaus {
 			get { return _einaus; }
-			set { _einaus = value;  }
+			set { _einaus = value; }
 		}
 		private string? _prozent;
 		public string? prozent {
@@ -205,7 +211,7 @@ namespace FreakaZoneAlexaSkill.Data {
 		}
 		private string? _linksrechts;
 		public string? linksrechts {
-			get {  return _linksrechts; }
+			get { return _linksrechts; }
 			set { _linksrechts = value; }
 		}
 

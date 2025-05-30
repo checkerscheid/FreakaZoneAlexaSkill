@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace FreakaZoneAlexaSkill {
 	internal static class Program {
-		public const string subversion = "218";
+		public const string subversion = "233";
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>

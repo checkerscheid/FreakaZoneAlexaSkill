@@ -18,6 +18,7 @@ using FreakaZone.Libraries.wpIniFile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill {
@@ -50,8 +51,6 @@ namespace FreakaZoneAlexaSkill {
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			//builder.Services.AddSwaggerGen();
-
-			//FreakaZone.Libraries.wpEventLog.Debug debug = new FreakaZone.Libraries.wpEventLog.Debug("FreakaZoneAlexaSkill");
 
 			var app = builder.Build();
 
