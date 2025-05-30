@@ -14,11 +14,9 @@
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpEventLog;
-using FreakaZone.Libraries.wpIniFile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace FreakaZoneAlexaSkill {
