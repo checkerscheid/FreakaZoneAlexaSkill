@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 233                                                     $ #
+//# Revision     : $Rev:: 236                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Lichtleiste.cs 233 2025-05-25 18:09:18Z                  $ #
+//# File-ID      : $Id:: Lichtleiste.cs 236 2025-05-30 11:21:55Z                  $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
