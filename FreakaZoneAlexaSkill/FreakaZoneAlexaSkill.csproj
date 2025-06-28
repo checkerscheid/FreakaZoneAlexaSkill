@@ -12,7 +12,12 @@
     <Product>Alexa Skill</Product>
     <AssemblyVersion>1.1</AssemblyVersion>
     <FileVersion>1.1</FileVersion>
+    <ApplicationIcon>Properties\FreakaZone.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Properties\FreakaZone.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\wpCommon\wpCommon.csproj" />

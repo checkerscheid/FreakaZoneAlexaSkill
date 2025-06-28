@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 233                                                     $ #
+//# Revision     : $Rev:: 244                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 233 2025-05-25 18:09:18Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 244 2025-06-28 15:02:16Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -35,6 +35,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 	[ApiController]
 	[Route("[controller]")]
 	public class AlexaController: Controller {
+		const string INTENT_WORKFINISHED = "workfinished";
 		const string INTENT_SLEEPNOW = "sleepnow";
 		const string INTENT_RGBCCT = "rgbcct";
 		const string INTENT_EVENTLIGHTING = "lichterkette";
@@ -102,14 +103,22 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							int h = 0;
 							int m = 30;
 							int sec = (h * 60 * 60) + (m * 60);
-							Task.Run(async () => await HitUrl("172.17.80.169", $"setNeoPixel?r=100&g=5&b=0&sleep={sec}"));
-							Task.Run(async () => await HitUrl("172.17.80.164", $"setCwWw?cw=10&ww=0&sleep={sec}"));
-							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off"));
-							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off"));
-							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off"));
-							Task.Run(async () => await HitUrl("wpLicht:turner@172.17.80.162", "relay/0?turn=off"));
+							Task.Run(() => HitUrl("172.17.80.169", $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl("172.17.80.164", $"setCwWw?cw=10&ww=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off")).Wait();
+							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.162", "relay/0?turn=off")).Wait();
 							output.Response.ShouldEndSession = true;
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} finished");
+							break;
+						case INTENT_WORKFINISHED:
+							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKFINISHED} detected");
+							Task.Run(() => HitUrl("172.17.80.125", "setBM?mode=auto")).Wait();
+							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.120", "light/0?timer=60")).Wait();
+							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh man, ich muss noch ein bissl!</amazon:emotion><amazon:effect name=\"whispered\">du arsch</amazon:effect></speak>");
+							output.Response.ShouldEndSession = true;
+							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKFINISHED} finished");
 							break;
 						case INTENT_RGBCCT:
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_RGBCCT} detected");

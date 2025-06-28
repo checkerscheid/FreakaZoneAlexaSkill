@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 236                                                     $ #
+//# Revision     : $Rev:: 242                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Eventbeleuchtung.cs 236 2025-05-30 11:21:55Z             $ #
+//# File-ID      : $Id:: Eventbeleuchtung.cs 242 2025-06-18 08:35:27Z             $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
@@ -72,21 +72,21 @@ namespace FreakaZoneAlexaSkill.Data {
 					case "ein":
 					case "an":
 						if(target == "")
-							_ = HitUrl("setCwWw?ww=50&cw=50");
+							HitUrl("setCwWw?ww=50&cw=50");
 						if(target == "links")
-							_ = HitUrl("setCwWw?ww=50");
+							HitUrl("setCwWw?ww=50");
 						if(target == "rechts")
-							_ = HitUrl("setCwWw?cw=50");
+							HitUrl("setCwWw?cw=50");
 						returnmsg = $"Joo, {_name} {target} is an gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "aus":
 						if(target == "")
-							_ = HitUrl("setCwWw?ww=0&cw=0");
+							HitUrl("setCwWw?ww=0&cw=0");
 						if(target == "links")
-							_ = HitUrl("setCwWw?ww=0");
+							HitUrl("setCwWw?ww=0");
 						if(target == "rechts")
-							_ = HitUrl("setCwWw?cw=0");
+							HitUrl("setCwWw?cw=0");
 						returnmsg = $"Joo, {_name} {target} is aus gemacht";
 						returns = AlexaReturnType.String;
 						break;
@@ -96,22 +96,22 @@ namespace FreakaZoneAlexaSkill.Data {
 				int p;
 				if(Int32.TryParse(param.prozent, out p)) {
 					if(target == "")
-						_ = HitUrl($"setCwWw?ww={p}&cw={p}");
+						HitUrl($"setCwWw?ww={p}&cw={p}");
 					if(target == "links")
-						_ = HitUrl($"setCwWw?ww={p}");
+						HitUrl($"setCwWw?ww={p}");
 					if(target == "rechts")
-						_ = HitUrl($"setCwWw?cw={p}");
+						HitUrl($"setCwWw?cw={p}");
 					returnmsg = $"Joo, {_name} {target} {p} prozent is gemacht";
 					returns = AlexaReturnType.String;
 				}
 			}
 			if(param.einaus == null && param.prozent == null) {
 				if(target == "")
-					_ = HitUrl($"setCwWw?effect=4");
+					HitUrl($"setCwWw?effect=4");
 				if(target == "links")
-					_ = HitUrl($"setCwWw?effect=5");
+					HitUrl($"setCwWw?effect=5");
 				if(target == "rechts")
-					_ = HitUrl($"setCwWw?effect=6");
+					HitUrl($"setCwWw?effect=6");
 				returnmsg = $"Joo, {_name} {target} effect is gemacht";
 				returns = AlexaReturnType.String;
 			}
@@ -141,7 +141,10 @@ namespace FreakaZoneAlexaSkill.Data {
 		/// asynchronous GET request to the constructed URL, and logs the response.</remarks>
 		/// <param name="cmd">The command to append to the base URL for the request. Must not be null or empty.</param>
 		/// <returns></returns>
-		private async Task HitUrl(string cmd) {
+		private void HitUrl(string cmd) {
+			Task.Run(() => HitUrlAsync(cmd)).Wait();
+		}
+		private async Task HitUrlAsync(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);

@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 236                                                     $ #
+//# Revision     : $Rev:: 242                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Lichtleiste.cs 236 2025-05-30 11:21:55Z                  $ #
+//# File-ID      : $Id:: Lichtleiste.cs 242 2025-06-18 08:35:27Z                  $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpCommon;
@@ -65,13 +65,13 @@ namespace FreakaZoneAlexaSkill.Data {
 			returnmsg = "Da ist was schief gelaufen";
 			if(param.einaus == null && param.prozent == null) {
 				// case "rainbow":
-				_ = HitUrl("setNeoPixel?effect=3");
+				HitUrl("setNeoPixel?effect=3");
 				returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>";
 				returns = AlexaReturnType.Ssml;
 				//	break;
 				//case "rainbow wheel":
 				//	returnmsg = new SsmlOutputSpeech($"<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">Joo, {_name} rainbow wheel is gemacht</amazon:emotion><amazon:effect name=\"whispered\">aber bitte schlag mich nicht schon wieder</amazon:effect></speak>");
-				//	_ = hitUrl("setNeoPixel?effect=4");
+				//	HitUrl("setNeoPixel?effect=4");
 				//	returns = true;
 				//	break;
 			}
@@ -79,28 +79,28 @@ namespace FreakaZoneAlexaSkill.Data {
 				switch(param.einaus) {
 					case "ein":
 					case "an":
-						_ = HitUrl("setNeoPixel?turn=1");
+						HitUrl("setNeoPixel?turn=1");
 						returnmsg = $"Joo, {_name} is an gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "aus":
-						_ = HitUrl("setNeoPixel?turn=0");
+						HitUrl("setNeoPixel?turn=0");
 						returnmsg = $"Joo, {_name} is aus gemacht";
 						returns = AlexaReturnType.String;
 						break;
 					case "arztzimmer":
-						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=0&cw=75");
+						HitUrl("setNeoPixel?r=0&g=0&b=0&ww=0&cw=75");
 						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} arztzimmer is gemacht</amazon:emotion></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
 					case "sonnenschein":
 					case "sonne":
-						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=75&cw=25");
+						HitUrl("setNeoPixel?r=0&g=0&b=0&ww=75&cw=25");
 						returnmsg = $"<speak><amazon:emotion name=\"disappointed\" intensity=\"low\">Joo, {_name} sonnenschein is gemacht</amazon:emotion></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
 					case "gemütlich":
-						_ = HitUrl("setNeoPixel?r=0&g=0&b=0&ww=50&cw=5");
+						HitUrl("setNeoPixel?r=0&g=0&b=0&ww=50&cw=5");
 						returnmsg = $"<speak>Psst, <amazon:effect name=\"whispered\">{_name} gemütlich is gemacht</amazon:effect></speak>";
 						returns = AlexaReturnType.Ssml;
 						break;
@@ -113,7 +113,7 @@ namespace FreakaZoneAlexaSkill.Data {
 						p = 100;
 					if(p < 0)
 						p = 0;
-					_ = HitUrl($"setNeoPixel?brightness={p * 2.55}");
+					HitUrl($"setNeoPixel?brightness={p * 2.55}");
 					returnmsg = $"Joo, {_name} {p} prozent is gemacht";
 					returns = AlexaReturnType.String;
 				}
@@ -146,7 +146,10 @@ namespace FreakaZoneAlexaSkill.Data {
 		/// is a valid and URL-safe string.</remarks>
 		/// <param name="cmd">The command to append to the base URL for the request.</param>
 		/// <returns></returns>
-		private async Task HitUrl(string cmd) {
+		private void HitUrl(string cmd) {
+			Task.Run(() => HitUrlAsync(cmd)).Wait();
+		}
+		private async Task HitUrlAsync(string cmd) {
 			HttpClient client = new HttpClient();
 			string url = $"http://{_ip}/{cmd}";
 			HttpResponseMessage response = await client.GetAsync(url);
