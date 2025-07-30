@@ -8,11 +8,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 19.05.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 239                                                     $ #
+//# Revision     : $Rev:: 248                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaSkill.Designer.cs 239 2025-05-30 11:26:03Z          $ #
+//# File-ID      : $Id:: AlexaSkill.Designer.cs 248 2025-07-07 14:24:05Z          $ #
 //#                                                                                 #
 //###################################################################################
+using System.Diagnostics;
+using System.Reflection;
+using static FreakaZone.Libraries.wpEventLog.Logger;
+
 namespace FreakaZoneAlexaSkill {
 	partial class AlexaSkill {
 		/// <summary>
@@ -117,10 +121,15 @@ namespace FreakaZoneAlexaSkill {
 			Name = "AlexaSkill";
 			Text = "FreakaZone Alexa Skill";
 			ClientSizeChanged += AlexaSkill_ClientSizeChanged;
+			FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FreakaZoneAlexaSkill_FormClosing);
 			statusStrip1.ResumeLayout(false);
 			statusStrip1.PerformLayout();
 			ResumeLayout(false);
 			PerformLayout();
+		}
+
+		private void FreakaZoneAlexaSkill_FormClosing(object sender, FormClosingEventArgs e) {
+			Debug.Write(MethodInfo.GetCurrentMethod(), Application.ProductName + " Server gestoppt");
 		}
 
 		#endregion

@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 244                                                     $ #
+//# Revision     : $Rev:: 248                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 244 2025-06-28 15:02:16Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 248 2025-07-07 14:24:05Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -19,6 +19,7 @@ using Alexa.NET.Response;
 using FreakaZone.Libraries.wpCommon;
 using FreakaZone.Libraries.wpEventLog;
 using FreakaZone.Libraries.wpSamsungRemote;
+using FreakaZone.Libraries.wpSQL.Table;
 using FreakaZoneAlexaSkill.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
@@ -35,6 +36,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 	[ApiController]
 	[Route("[controller]")]
 	public class AlexaController: Controller {
+		const string INTENT_WORKSTART = "workstart";
 		const string INTENT_WORKFINISHED = "workfinished";
 		const string INTENT_SLEEPNOW = "sleepnow";
 		const string INTENT_RGBCCT = "rgbcct";
@@ -62,7 +64,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 
 			Lichtleisten lichtleisten = new Lichtleisten();
 			Eventbeleuchtungen eventbeleuchtungen = new Eventbeleuchtungen();
-			Tvs tvs = new Tvs(false);
+			Tvs tvs = new Tvs();
 
 			lichtleisten.Init();
 			eventbeleuchtungen.Init();
@@ -88,6 +90,9 @@ namespace FreakaZoneAlexaSkill.Controllers {
 					AlexaReturnType returns;
 					string returnMsg;
 					IOutputSpeech returnSpeech = defaultMsg;
+
+
+					Debug.Write(MethodBase.GetCurrentMethod(), $"New Intent: {ir.Intent.Name} detected");
 					switch(ir.Intent.Name) {
 						case INTENT_SLEEPNOW:
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} detected");
@@ -103,20 +108,28 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							int h = 0;
 							int m = 30;
 							int sec = (h * 60 * 60) + (m * 60);
-							Task.Run(() => HitUrl("172.17.80.169", $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
-							Task.Run(() => HitUrl("172.17.80.164", $"setCwWw?cw=10&ww=0&sleep={sec}")).Wait();
-							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.163", "color/0?turn=off")).Wait();
-							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.160", "relay/0?turn=off")).Wait();
-							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.161", "relay/0?turn=off")).Wait();
-							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.162", "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_NP"), $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_KE"), $"setCwWw?cw=10&ww=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Licht"), "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Bett"), "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Nachtlicht"), "relay/0?turn=off")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Bilderahmen"), "color/0?turn=off")).Wait();
 							output.Response.ShouldEndSession = true;
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_SLEEPNOW} finished");
 							break;
+						case INTENT_WORKSTART:
+							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKSTART} detected");
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "BU_RU"), "setBM?mode=manual")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Büro Licht"), "light/0?turn=on&timer=0")).Wait();
+							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"excited\" intensity=\"high\">viel spaß beim schaffen</amazon:emotion></speak>");
+							output.Response.ShouldEndSession = true;
+							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKSTART} finished");
+							break;
 						case INTENT_WORKFINISHED:
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKFINISHED} detected");
-							Task.Run(() => HitUrl("172.17.80.125", "setBM?mode=auto")).Wait();
-							Task.Run(() => HitUrl("wpLicht:turner@172.17.80.120", "light/0?timer=60")).Wait();
-							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh man, ich muss noch ein bissl!</amazon:emotion><amazon:effect name=\"whispered\">du arsch</amazon:effect></speak>");
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "BU_RU"), "setBM?mode=auto")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Büro Licht"), "light/0?timer=60")).Wait();
+							output.Response.OutputSpeech = new SsmlOutputSpeech("<speak><amazon:emotion name=\"disappointed\" intensity=\"high\">ooooh man, ich muss noch ein bissl!</amazon:emotion><amazon:effect name=\"whispered\">duarsch</amazon:effect></speak>");
 							output.Response.ShouldEndSession = true;
 							Debug.Write(MethodBase.GetCurrentMethod(), $"Intent {INTENT_WORKFINISHED} finished");
 							break;
@@ -232,6 +245,32 @@ namespace FreakaZoneAlexaSkill.Controllers {
 			HttpResponseMessage response = await client.GetAsync(url);
 			string responseBody = await response.Content.ReadAsStringAsync();
 			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}:\r\n\t{responseBody}");
+		}
+		private async Task HitUrl(string ip, string cmd, string un, string pw) {
+			HttpClient client = new HttpClient();
+			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes($"{un}:{pw}")));
+			string url = $"http://{ip}/{cmd}";
+			HttpResponseMessage response = await client.GetAsync(url);
+			string responseBody = await response.Content.ReadAsStringAsync();
+			Debug.Write(MethodBase.GetCurrentMethod(), $"{url}:\r\n\t{responseBody}");
+		}
+		private async Task HitUrl(TableShelly? shelly, string cmd) {
+			if(shelly != null) {
+				if(!String.IsNullOrEmpty(shelly.un) && !String.IsNullOrEmpty(shelly.pw)) {
+					await HitUrl(shelly.ip, cmd, shelly.un, shelly.pw);
+				} else {
+					await HitUrl(shelly.ip, cmd);
+				}
+			} else {
+				Debug.Write(MethodBase.GetCurrentMethod(), $"Shelly not found for command: {cmd}");
+			}
+		}
+		private async Task HitUrl(TableD1Mini? d1Mini, string cmd) {
+			if(d1Mini != null) {
+				await HitUrl(d1Mini.ip, cmd);
+			} else {
+				Debug.Write(MethodBase.GetCurrentMethod(), $"D1Mini not found for command: {cmd}");
+			}
 		}
 	}
 }

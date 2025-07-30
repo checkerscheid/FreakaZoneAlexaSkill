@@ -8,12 +8,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 19.05.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 239                                                     $ #
+//# Revision     : $Rev:: 248                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaSkill.cs 239 2025-05-30 11:26:03Z                   $ #
+//# File-ID      : $Id:: AlexaSkill.cs 248 2025-07-07 14:24:05Z                   $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpEventLog;
+using FreakaZone.Libraries.wpSQL;
+using FreakaZone.Libraries.wpSQL.Table;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ namespace FreakaZoneAlexaSkill {
 	public partial class AlexaSkill: Form {
 
 		private FormWindowState lastState;
+		public static List<TableD1Mini> d1Minis = new List<TableD1Mini>();
+		public static List<TableShelly> shellys = new List<TableShelly>();
 		public AlexaSkill() {
 			InitializeComponent();
 			Debug.SetRefString(lbl_msg);
@@ -33,6 +37,10 @@ namespace FreakaZoneAlexaSkill {
 				Program.subversion,
 				Application.CompanyName);
 			this.SystemIcon.Text = Application.ProductName;
+			using(Database sql = new Database("Get Controller")) {
+				d1Minis = sql.Select<TableD1Mini>();
+				shellys = sql.Select<TableShelly>();
+			}
 			Task.Run(() => {
 				StartListener();
 			});
