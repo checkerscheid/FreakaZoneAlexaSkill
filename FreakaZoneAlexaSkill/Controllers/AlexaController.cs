@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 249                                                     $ #
+//# Revision     : $Rev:: 250                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: AlexaController.cs 249 2025-07-30 22:16:11Z              $ #
+//# File-ID      : $Id:: AlexaController.cs 250 2025-09-21 14:15:49Z              $ #
 //#                                                                                 #
 //###################################################################################
 using Alexa.NET.Request;
@@ -110,6 +110,7 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							int sec = (h * 60 * 60) + (m * 60);
 							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_NP"), $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_KE"), $"setCwWw?cw=10&ww=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_Hasi"), $"setCwWw?cw=1&ww=0&sleep={sec}")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Licht"), "relay/0?turn=off")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Bett"), "relay/0?turn=off")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Nachtlicht"), "relay/0?turn=off")).Wait();

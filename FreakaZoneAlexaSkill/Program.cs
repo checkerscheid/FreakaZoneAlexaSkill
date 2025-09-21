@@ -8,9 +8,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 249                                                     $ #
+//# Revision     : $Rev:: 250                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: Program.cs 249 2025-07-30 22:16:11Z                      $ #
+//# File-ID      : $Id:: Program.cs 250 2025-09-21 14:15:49Z                      $ #
 //#                                                                                 #
 //###################################################################################
 using FreakaZone.Libraries.wpEventLog;
@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace FreakaZoneAlexaSkill {
 	internal static class Program {
-		public const string subversion = "248";
+		public const string subversion = "249";
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
