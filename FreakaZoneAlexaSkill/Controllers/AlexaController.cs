@@ -108,9 +108,10 @@ namespace FreakaZoneAlexaSkill.Controllers {
 							int h = 0;
 							int m = 30;
 							int sec = (h * 60 * 60) + (m * 60);
-							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_NP"), $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
+							//Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_NP"), $"setNeoPixel?r=100&g=5&b=0&ww=0&cw=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_NP"), $"setNeoPixel?turn=0")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_KE"), $"setCwWw?cw=10&ww=0&sleep={sec}")).Wait();
-							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_Hasi"), $"setCwWw?cw=1&ww=0&sleep={sec}")).Wait();
+							Task.Run(() => HitUrl(AlexaSkill.d1Minis.Find(d => d.name == "KZ_Hasi"), $"setCwWw?cw=0&ww=1&sleep={sec}")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Licht"), "relay/0?turn=off")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Bett"), "relay/0?turn=off")).Wait();
 							Task.Run(() => HitUrl(AlexaSkill.shellys.Find(s => s.name == "Kinderzimmer Nachtlicht"), "relay/0?turn=off")).Wait();
